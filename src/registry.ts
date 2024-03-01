@@ -38,7 +38,20 @@ export const addDefaultMockedRoutes = (routes: MockedRoute[]) => {
   addMockedRoutes({ scope: DEFAULT_SCOPE, routes });
 };
 
-const findMatch = ({ scope, path, method }: { scope: string; path: string; method: string }) => {
+const findMatch = ({
+  scope,
+  path,
+  method,
+}: {
+  scope: string;
+  path: string;
+  method: string;
+}):
+  | {
+      route: MockedRoute;
+      matchType: 'exact' | 'pattern';
+    }
+  | undefined => {
   const routes = registry.get(scope) ?? [];
 
   const exactMatchingRoute = routes.find((route) => route.pathPattern === path && route.method === method);
@@ -48,7 +61,10 @@ const findMatch = ({ scope, path, method }: { scope: string; path: string; metho
       `Found matching route in scope ${scope} for: ${method} ${path} [exact: ${exactMatchingRoute.pathPattern}]`,
     );
 
-    return exactMatchingRoute;
+    return {
+      route: exactMatchingRoute,
+      matchType: 'exact',
+    };
   }
 
   const exactMatchingFallbackRoute = routes.find((route) => route.pathPattern === path && route.method === 'ALL');
@@ -58,7 +74,10 @@ const findMatch = ({ scope, path, method }: { scope: string; path: string; metho
       `Found fallback route in scope ${scope} for: ALL ${path} [exact: ${exactMatchingFallbackRoute.pathPattern}]`,
     );
 
-    return exactMatchingFallbackRoute;
+    return {
+      route: exactMatchingFallbackRoute,
+      matchType: 'exact',
+    };
   }
 
   const matchingRoute = routes.find((route) => new RegExp(route.pathPattern).test(path) && route.method === method);
@@ -68,7 +87,10 @@ const findMatch = ({ scope, path, method }: { scope: string; path: string; metho
       `Found matching route in scope ${scope} for: ${method} ${path} [pattern: ${matchingRoute.pathPattern}]`,
     );
 
-    return matchingRoute;
+    return {
+      route: matchingRoute,
+      matchType: 'pattern',
+    };
   }
 
   if (method !== 'ALL') {
@@ -77,7 +99,10 @@ const findMatch = ({ scope, path, method }: { scope: string; path: string; metho
     if (fallbackRoute) {
       logger.info(`Found fallback route in scope ${scope} for: ALL ${path} [pattern: ${fallbackRoute.pathPattern}]`);
 
-      return fallbackRoute;
+      return {
+        route: fallbackRoute,
+        matchType: 'pattern',
+      };
     }
   }
 

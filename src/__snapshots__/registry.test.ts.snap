@@ -2,45 +2,60 @@
 
 exports[`registry should find a route via exact matching: / 1`] = `
 {
-  "method": "GET",
-  "pathPattern": "/",
-  "response": "hi",
-  "status": 200,
+  "matchType": "exact",
+  "route": {
+    "method": "GET",
+    "pathPattern": "/",
+    "response": "hi",
+    "status": 200,
+  },
 }
 `;
 
 exports[`registry should find a route via exact matching: /lorem/ipsum 1`] = `
 {
-  "method": "POST",
-  "pathPattern": "/lorem/ipsum",
-  "response": "dolor sit amet",
-  "status": 201,
+  "matchType": "exact",
+  "route": {
+    "method": "POST",
+    "pathPattern": "/lorem/ipsum",
+    "response": "dolor sit amet",
+    "status": 201,
+  },
 }
 `;
 
 exports[`registry should fall back to default scope: /fallback 1`] = `
 {
-  "method": "GET",
-  "pathPattern": "/fallback",
-  "response": "fallback",
-  "status": 200,
+  "matchType": "exact",
+  "route": {
+    "method": "GET",
+    "pathPattern": "/fallback",
+    "response": "fallback",
+    "status": 200,
+  },
 }
 `;
 
 exports[`registry should fall back to ALL method: / 1`] = `
 {
-  "method": "ALL",
-  "pathPattern": "/catch-all",
-  "response": "I got you covered!",
-  "status": 200,
+  "matchType": "exact",
+  "route": {
+    "method": "ALL",
+    "pathPattern": "/catch-all",
+    "response": "I got you covered!",
+    "status": 200,
+  },
 }
 `;
 
 exports[`registry should fall back to ALL method of default scope: / 1`] = `
 {
-  "method": "ALL",
-  "pathPattern": "/catch-all",
-  "response": "I got you covered!",
-  "status": 200,
+  "matchType": "exact",
+  "route": {
+    "method": "ALL",
+    "pathPattern": "/catch-all",
+    "response": "I got you covered!",
+    "status": 200,
+  },
 }
 `;
