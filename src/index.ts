@@ -1,4 +1,5 @@
 import { Elysia } from 'elysia';
+import { logger } from './logger';
 
 const app = new Elysia()
 
@@ -12,4 +13,4 @@ const app = new Elysia()
 
   .listen(Bun.env.PORT || 3210);
 
-console.log(`🪞 Mock Mirror is running at ${app.server?.hostname}:${app.server?.port}`);
+logger.info(`🪞 Mock Mirror is running at ${app.server?.hostname}:${app.server?.port}`);
