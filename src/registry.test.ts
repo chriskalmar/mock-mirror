@@ -6,7 +6,7 @@ describe('registry', () => {
     resetRegistry();
   });
 
-  it('should match a regular path', async () => {
+  it('should find a route via exact matching', async () => {
     const scope = 'ff71ae5d-3112-4321-a9e1-459f72a453c0';
 
     addMockedRoutes({
@@ -27,9 +27,14 @@ describe('registry', () => {
       ],
     });
 
-    const route = findMatchingRoute({ scope, path: '/', method: 'GET' });
+    {
+      const route = findMatchingRoute({ scope, path: '/', method: 'GET' });
+      expect(route).toMatchSnapshot('/');
+    }
 
-    expect(route).toMatchSnapshot('/');
-    expect(route).toMatchSnapshot('/lorem/ipsum');
+    {
+      const route = findMatchingRoute({ scope, path: '/lorem/ipsum', method: 'POST' });
+      expect(route).toMatchSnapshot('/lorem/ipsum');
+    }
   });
 });

@@ -1,0 +1,19 @@
+// Bun Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`registry should find a route via exact matching: / 1`] = `
+{
+  "method": "GET",
+  "pathPattern": "/",
+  "response": "hi",
+  "status": 200,
+}
+`;
+
+exports[`registry should find a route via exact matching: /lorem/ipsum 1`] = `
+{
+  "method": "POST",
+  "pathPattern": "/lorem/ipsum",
+  "response": "dolor sit amet",
+  "status": 201,
+}
+`;
