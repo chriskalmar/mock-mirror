@@ -41,6 +41,16 @@ export const addDefaultMockedRoutes = (routes: MockedRoute[]) => {
 const findMatch = ({ scope, path, method }: { scope: string; path: string; method: string }) => {
   const routes = registry.get(scope) ?? [];
 
+  const exactMatchingRoute = routes.find((route) => route.pathPattern === path && route.method === method);
+
+  if (exactMatchingRoute) {
+    logger.info(
+      `Found matching route in scope ${scope} for: ${method} ${path} [exact: ${exactMatchingRoute.pathPattern}]`,
+    );
+
+    return exactMatchingRoute;
+  }
+
   const matchingRoute = routes.find((route) => new RegExp(route.pathPattern).test(path) && route.method === method);
 
   if (matchingRoute) {
