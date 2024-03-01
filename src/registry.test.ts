@@ -70,4 +70,18 @@ describe('registry', () => {
     const route = findMatchingRoute({ scope, path: '/catch-all', method: 'GET' });
     expect(route).toMatchSnapshot('/');
   });
+
+  it('should fall back to ALL method of default scope', async () => {
+    addDefaultMockedRoutes([
+      {
+        pathPattern: '/catch-all',
+        method: 'ALL',
+        response: 'I got you covered!',
+        status: 200,
+      },
+    ]);
+
+    const route = findMatchingRoute({ scope: 'does-not-exist', path: '/catch-all', method: 'GET' });
+    expect(route).toMatchSnapshot('/');
+  });
 });
