@@ -25,3 +25,25 @@ type MockedRoutes = MockedRoute[];
 const registry = new Map<string, MockedRoutes>();
 
 registry.set(DEFAULT_SCOPE, []);
+
+export const addMockedRoute = ({
+  scope,
+  route,
+}: {
+  scope: string;
+  route: MockedRoute;
+}) => {
+  const routes = registry.get(scope) || [];
+
+  registry.set(scope, [route, ...routes]);
+};
+
+export const addMockedRoutes = ({
+  scope,
+  routes,
+}: {
+  scope: string;
+  routes: MockedRoute[];
+}) => {
+  routes.forEach((route) => addMockedRoute({ scope, route }));
+};
