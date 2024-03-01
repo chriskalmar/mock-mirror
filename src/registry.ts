@@ -1,5 +1,6 @@
 import { DEFAULT_SCOPE } from './const';
 import { logger } from './logger';
+import { minimatch } from 'minimatch';
 
 type MockedRoute = {
   pathPattern: string;
@@ -86,7 +87,7 @@ const findMatch = ({
     };
   }
 
-  const matchingRoute = routes.find((route) => new RegExp(route.pathPattern).test(path) && route.method === method);
+  const matchingRoute = routes.find((route) => minimatch(path, route.pathPattern) && route.method === method);
 
   if (matchingRoute) {
     logger.info(
@@ -102,7 +103,7 @@ const findMatch = ({
   }
 
   if (method !== 'ALL') {
-    const fallbackRoute = routes.find((route) => new RegExp(route.pathPattern).test(path) && route.method === 'ALL');
+    const fallbackRoute = routes.find((route) => minimatch(path, route.pathPattern) && route.method === 'ALL');
 
     if (fallbackRoute) {
       logger.info(`Found fallback route in scope ${scope} for: ALL ${path} [pattern: ${fallbackRoute.pathPattern}]`);
