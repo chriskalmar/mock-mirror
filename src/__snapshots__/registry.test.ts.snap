@@ -17,3 +17,12 @@ exports[`registry should find a route via exact matching: /lorem/ipsum 1`] = `
   "status": 201,
 }
 `;
+
+exports[`registry should fall back to default scope: /fallback 1`] = `
+{
+  "method": "GET",
+  "pathPattern": "/fallback",
+  "response": "fallback",
+  "status": 200,
+}
+`;

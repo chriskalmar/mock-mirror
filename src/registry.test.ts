@@ -37,4 +37,18 @@ describe('registry', () => {
       expect(route).toMatchSnapshot('/lorem/ipsum');
     }
   });
+
+  it('should fall back to default scope', async () => {
+    addDefaultMockedRoutes([
+      {
+        pathPattern: '/fallback',
+        method: 'GET',
+        response: 'fallback',
+        status: 200,
+      },
+    ]);
+
+    const route = findMatchingRoute({ scope: 'does-not-exist', path: '/fallback', method: 'GET' });
+    expect(route).toMatchSnapshot('/fallback');
+  });
 });
