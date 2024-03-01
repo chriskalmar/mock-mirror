@@ -42,7 +42,7 @@ exports[`registry should fall back to default scope: /fallback 1`] = `
 }
 `;
 
-exports[`registry should fall back to ALL method: / 1`] = `
+exports[`registry should fall back to ALL method: /catch-all 1`] = `
 {
   "matchType": "exact",
   "pathPattern": "/catch-all",
@@ -56,7 +56,7 @@ exports[`registry should fall back to ALL method: / 1`] = `
 }
 `;
 
-exports[`registry should fall back to ALL method of default scope: / 1`] = `
+exports[`registry should fall back to ALL method of default scope: /catch-all 1`] = `
 {
   "matchType": "exact",
   "pathPattern": "/catch-all",
