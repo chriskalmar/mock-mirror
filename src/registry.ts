@@ -1,5 +1,7 @@
+import { DEFAULT_SCOPE } from "./const";
+
 type MockedRoute = {
-  path: string;
+  pathPattern: string;
   method:
     | "GET"
     | "POST"
@@ -14,10 +16,12 @@ type MockedRoute = {
   response: unknown;
   status: number;
   headers: Record<string, string>;
-  delay: number;
   contentType: string;
+  delay: number;
 };
 
-type MockedRoutes = Map<string, MockedRoute>;
+type MockedRoutes = MockedRoute[];
 
 const registry = new Map<string, MockedRoutes>();
+
+registry.set(DEFAULT_SCOPE, []);
