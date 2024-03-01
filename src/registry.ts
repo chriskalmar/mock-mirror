@@ -51,6 +51,16 @@ const findMatch = ({ scope, path, method }: { scope: string; path: string; metho
     return exactMatchingRoute;
   }
 
+  const exactMatchingFallbackRoute = routes.find((route) => route.pathPattern === path && route.method === 'ALL');
+
+  if (exactMatchingFallbackRoute) {
+    logger.info(
+      `Found fallback route in scope ${scope} for: ALL ${path} [exact: ${exactMatchingFallbackRoute.pathPattern}]`,
+    );
+
+    return exactMatchingFallbackRoute;
+  }
+
   const matchingRoute = routes.find((route) => new RegExp(route.pathPattern).test(path) && route.method === method);
 
   if (matchingRoute) {
@@ -61,8 +71,6 @@ const findMatch = ({ scope, path, method }: { scope: string; path: string; metho
     return matchingRoute;
   }
 
-  logger.warn(`No matching route found in scope ${scope} for: ${method} ${path}`);
-
   if (method !== 'ALL') {
     const fallbackRoute = routes.find((route) => new RegExp(route.pathPattern).test(path) && route.method === 'ALL');
 
@@ -72,6 +80,8 @@ const findMatch = ({ scope, path, method }: { scope: string; path: string; metho
       return fallbackRoute;
     }
   }
+
+  logger.warn(`No matching route found in scope ${scope} for: ${method} ${path}`);
 };
 
 export const findMatchingRoute = ({ scope, path, method }: { scope: string; path: string; method: string }) => {
