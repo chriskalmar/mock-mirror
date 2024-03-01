@@ -59,15 +59,15 @@ describe('registry', () => {
       scope,
       routes: [
         {
-          pathPattern: '/',
+          pathPattern: '/catch-all',
           method: 'ALL',
-          response: 'hi',
+          response: 'I got you covered!',
           status: 200,
         },
       ],
     });
 
-    const route = findMatchingRoute({ scope, path: '/', method: 'GET' });
+    const route = findMatchingRoute({ scope, path: '/catch-all', method: 'GET' });
     expect(route).toMatchSnapshot('/');
   });
 });

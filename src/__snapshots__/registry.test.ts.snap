@@ -30,8 +30,8 @@ exports[`registry should fall back to default scope: /fallback 1`] = `
 exports[`registry should fall back to ALL method: / 1`] = `
 {
   "method": "ALL",
-  "pathPattern": "/",
-  "response": "hi",
+  "pathPattern": "/catch-all",
+  "response": "I got you covered!",
   "status": 200,
 }
 `;
