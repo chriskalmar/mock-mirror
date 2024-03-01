@@ -50,6 +50,8 @@ const findMatch = ({
   | {
       route: MockedRoute;
       matchType: 'exact' | 'pattern';
+      scope: string;
+      pathPattern: string;
     }
   | undefined => {
   const routes = registry.get(scope) ?? [];
@@ -64,6 +66,8 @@ const findMatch = ({
     return {
       route: exactMatchingRoute,
       matchType: 'exact',
+      scope,
+      pathPattern: exactMatchingRoute.pathPattern,
     };
   }
 
@@ -77,6 +81,8 @@ const findMatch = ({
     return {
       route: exactMatchingFallbackRoute,
       matchType: 'exact',
+      scope,
+      pathPattern: exactMatchingFallbackRoute.pathPattern,
     };
   }
 
@@ -90,6 +96,8 @@ const findMatch = ({
     return {
       route: matchingRoute,
       matchType: 'pattern',
+      scope,
+      pathPattern: matchingRoute.pathPattern,
     };
   }
 
@@ -102,6 +110,8 @@ const findMatch = ({
       return {
         route: fallbackRoute,
         matchType: 'pattern',
+        scope,
+        pathPattern: fallbackRoute.pathPattern,
       };
     }
   }

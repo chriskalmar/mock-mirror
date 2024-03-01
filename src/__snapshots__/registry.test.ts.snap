@@ -3,59 +3,69 @@
 exports[`registry should find a route via exact matching: / 1`] = `
 {
   "matchType": "exact",
+  "pathPattern": "/",
   "route": {
     "method": "GET",
     "pathPattern": "/",
     "response": "hi",
     "status": 200,
   },
+  "scope": "ff71ae5d-3112-4321-a9e1-459f72a453c0",
 }
 `;
 
 exports[`registry should find a route via exact matching: /lorem/ipsum 1`] = `
 {
   "matchType": "exact",
+  "pathPattern": "/lorem/ipsum",
   "route": {
     "method": "POST",
     "pathPattern": "/lorem/ipsum",
     "response": "dolor sit amet",
     "status": 201,
   },
+  "scope": "ff71ae5d-3112-4321-a9e1-459f72a453c0",
 }
 `;
 
 exports[`registry should fall back to default scope: /fallback 1`] = `
 {
   "matchType": "exact",
+  "pathPattern": "/fallback",
   "route": {
     "method": "GET",
     "pathPattern": "/fallback",
     "response": "fallback",
     "status": 200,
   },
+  "scope": "[DEFAULT]",
 }
 `;
 
 exports[`registry should fall back to ALL method: / 1`] = `
 {
   "matchType": "exact",
+  "pathPattern": "/catch-all",
   "route": {
     "method": "ALL",
     "pathPattern": "/catch-all",
     "response": "I got you covered!",
     "status": 200,
   },
+  "scope": "ff71ae5d-3112-4321-a9e1-459f72a453c0",
 }
 `;
 
 exports[`registry should fall back to ALL method of default scope: / 1`] = `
 {
   "matchType": "exact",
+  "pathPattern": "/catch-all",
   "route": {
     "method": "ALL",
     "pathPattern": "/catch-all",
     "response": "I got you covered!",
     "status": 200,
   },
+  "scope": "[DEFAULT]",
 }
 `;
