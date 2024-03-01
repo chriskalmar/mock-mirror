@@ -38,5 +38,21 @@ export const findMatchingRoute = ({ scope, path, method }: { scope: string; path
 
   const matchingRoute = routes.find((route) => new RegExp(route.pathPattern).test(path) && route.method === method);
 
-  return matchingRoute;
+  if (matchingRoute) {
+    logger.info(`Found matching route in scope ${scope} for: ${method} ${path}`);
+
+    return matchingRoute;
+  }
+
+  logger.warn(`No matching route found in scope ${scope} for: ${method} ${path}`);
+
+  if (method !== 'ALL') {
+    const fallbackRoute = routes.find((route) => new RegExp(route.pathPattern).test(path) && route.method === 'ALL');
+
+    if (fallbackRoute) {
+      logger.info(`Found fallback route in scope ${scope} for: ALL ${path}`);
+
+      return fallbackRoute;
+    }
+  }
 };
