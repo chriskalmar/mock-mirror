@@ -44,7 +44,9 @@ const findMatch = ({ scope, path, method }: { scope: string; path: string; metho
   const matchingRoute = routes.find((route) => new RegExp(route.pathPattern).test(path) && route.method === method);
 
   if (matchingRoute) {
-    logger.info(`Found matching route in scope ${scope} for: ${method} ${path}`);
+    logger.info(
+      `Found matching route in scope ${scope} for: ${method} ${path} [pattern: ${matchingRoute.pathPattern}]`,
+    );
 
     return matchingRoute;
   }
@@ -55,7 +57,7 @@ const findMatch = ({ scope, path, method }: { scope: string; path: string; metho
     const fallbackRoute = routes.find((route) => new RegExp(route.pathPattern).test(path) && route.method === 'ALL');
 
     if (fallbackRoute) {
-      logger.info(`Found fallback route in scope ${scope} for: ALL ${path}`);
+      logger.info(`Found fallback route in scope ${scope} for: ALL ${path} [pattern: ${fallbackRoute.pathPattern}]`);
 
       return fallbackRoute;
     }
