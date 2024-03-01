@@ -1,4 +1,5 @@
 import { DEFAULT_SCOPE } from './const';
+import { logger } from './logger';
 
 type MockedRoute = {
   pathPattern: string;
@@ -20,6 +21,8 @@ export const addMockedRoute = ({ scope, route }: { scope: string; route: MockedR
   const routes = registry.get(scope) || [];
 
   registry.set(scope, [route, ...routes]);
+
+  logger.info(`Added new route to scope ${scope}: ${route.method} ${route.pathPattern}`);
 };
 
 export const addMockedRoutes = ({ scope, routes }: { scope: string; routes: MockedRoute[] }) => {

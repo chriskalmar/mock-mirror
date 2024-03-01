@@ -1,1 +1,1 @@
-export const DEFAULT_SCOPE = '___default___';
+export const DEFAULT_SCOPE = '[DEFAULT]';
