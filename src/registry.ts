@@ -29,12 +29,8 @@ export const addMockedRoutes = ({ scope, routes }: { scope: string; routes: Mock
   routes.forEach((route) => addMockedRoute({ scope, route }));
 };
 
-export const findMatchingRoute = ({ scope, path, method }: { scope: string; path: string; method: string }) => {
-  if (!registry.has(scope)) {
-    logger.warn(`Scope ${scope} not found. Falling back to default scope: ${DEFAULT_SCOPE}`);
-  }
-
-  const routes = registry.get(scope) ?? registry.get(DEFAULT_SCOPE) ?? [];
+const findMatch = ({ scope, path, method }: { scope: string; path: string; method: string }) => {
+  const routes = registry.get(scope) ?? [];
 
   const matchingRoute = routes.find((route) => new RegExp(route.pathPattern).test(path) && route.method === method);
 
@@ -55,4 +51,14 @@ export const findMatchingRoute = ({ scope, path, method }: { scope: string; path
       return fallbackRoute;
     }
   }
+};
+
+export const findMatchingRoute = ({ scope, path, method }: { scope: string; path: string; method: string }) => {
+  if (registry.has(scope)) {
+    return findMatch({ scope, path, method });
+  }
+
+  logger.warn(`Scope ${scope} not found. Falling back to default scope: ${DEFAULT_SCOPE}`);
+
+  return findMatch({ scope: DEFAULT_SCOPE, path, method });
 };
