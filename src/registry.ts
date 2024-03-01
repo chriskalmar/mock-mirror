@@ -28,3 +28,15 @@ export const addMockedRoute = ({ scope, route }: { scope: string; route: MockedR
 export const addMockedRoutes = ({ scope, routes }: { scope: string; routes: MockedRoute[] }) => {
   routes.forEach((route) => addMockedRoute({ scope, route }));
 };
+
+export const findMatchingRoute = ({ scope, path, method }: { scope: string; path: string; method: string }) => {
+  if (!registry.has(scope)) {
+    logger.warn(`Scope ${scope} not found. Falling back to default scope: ${DEFAULT_SCOPE}`);
+  }
+
+  const routes = registry.get(scope) ?? registry.get(DEFAULT_SCOPE) ?? [];
+
+  const matchingRoute = routes.find((route) => new RegExp(route.pathPattern).test(path) && route.method === method);
+
+  return matchingRoute;
+};
