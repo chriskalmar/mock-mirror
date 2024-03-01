@@ -6,9 +6,9 @@ type MockedRoute = {
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'OPTIONS' | 'HEAD' | 'CONNECT' | 'TRACE' | 'ALL';
   response: unknown;
   status: number;
-  headers: Record<string, string>;
-  contentType: string;
-  delay: number;
+  headers?: Record<string, string>;
+  contentType?: string;
+  delay?: number;
 };
 
 type MockedRoutes = MockedRoute[];
@@ -16,6 +16,11 @@ type MockedRoutes = MockedRoute[];
 const registry = new Map<string, MockedRoutes>();
 
 registry.set(DEFAULT_SCOPE, []);
+
+export const resetRegistry = () => {
+  registry.clear();
+  registry.set(DEFAULT_SCOPE, []);
+};
 
 export const addMockedRoute = ({ scope, route }: { scope: string; route: MockedRoute }) => {
   const routes = registry.get(scope) || [];
@@ -27,6 +32,10 @@ export const addMockedRoute = ({ scope, route }: { scope: string; route: MockedR
 
 export const addMockedRoutes = ({ scope, routes }: { scope: string; routes: MockedRoute[] }) => {
   routes.forEach((route) => addMockedRoute({ scope, route }));
+};
+
+export const addDefaultMockedRoutes = (routes: MockedRoute[]) => {
+  addMockedRoutes({ scope: DEFAULT_SCOPE, routes });
 };
 
 const findMatch = ({ scope, path, method }: { scope: string; path: string; method: string }) => {
