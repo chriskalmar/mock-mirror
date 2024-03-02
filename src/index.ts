@@ -1,10 +1,10 @@
 import { Elysia, t } from 'elysia';
 import { logger } from './logger';
-import { addMockedRoutes, clearScope, findMatchingRoute, resetRegistry } from './registry';
+import { addDefaultMockedRoutes, addMockedRoutes, clearScope, findMatchingRoute, resetRegistry } from './registry';
 import { DEFAULT_SCOPE, MOCK_MIRROR_HEADER } from './const';
 import { MockedRoutes } from './schemas';
 
-const app = new Elysia()
+export const app = new Elysia()
 
   .get('/', () => "Hello 👋, I'm Mock Mirror")
 
@@ -23,7 +23,14 @@ const app = new Elysia()
       .post(
         '/add',
         ({ body }) => {
-          addMockedRoutes(body);
+          if (body.scope) {
+            addMockedRoutes({
+              scope: body.scope,
+              routes: body.routes,
+            });
+          } else {
+            addDefaultMockedRoutes(body.routes);
+          }
 
           return {
             success: true,
@@ -31,7 +38,7 @@ const app = new Elysia()
         },
         {
           body: t.Object({
-            scope: t.String(),
+            scope: t.Optional(t.String()),
             routes: MockedRoutes,
           }),
         },
