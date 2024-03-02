@@ -288,4 +288,45 @@ describe('registry', () => {
       expect(route).toMatchSnapshot('last pattern wins');
     }
   });
+
+  it('should only access routes in the correct scope', async () => {
+    addMockedRoutes({
+      scope: 'scope-one',
+      routes: [
+        {
+          pathPattern: '/api/users/*',
+          method: 'GET',
+          response: 'mock from scope-one',
+          status: 200,
+        },
+      ],
+    });
+
+    addMockedRoutes({
+      scope: 'scope-two',
+      routes: [
+        {
+          pathPattern: '/api/users/*',
+          method: 'GET',
+          response: 'mock from scope-two',
+          status: 200,
+        },
+      ],
+    });
+
+    {
+      const route = findMatchingRoute({ scope: 'scope-one', path: '/api/users/777', method: 'GET' });
+      expect(route).toMatchSnapshot('scope-one');
+    }
+
+    {
+      const route = findMatchingRoute({ scope: 'scope-two', path: '/api/users/777', method: 'GET' });
+      expect(route).toMatchSnapshot('scope-two');
+    }
+
+    {
+      const route = findMatchingRoute({ scope: 'scope-three', path: '/api/users/777', method: 'GET' });
+      expect(route).toBeUndefined();
+    }
+  });
 });

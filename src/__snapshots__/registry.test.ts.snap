@@ -265,3 +265,31 @@ exports[`registry should respect the order of routes: last pattern wins 1`] = `
   "scope": "ff71ae5d-3112-4321-a9e1-459f72a453c0",
 }
 `;
+
+exports[`registry should only access routes in the correct scope: scope-one 1`] = `
+{
+  "matchType": "pattern",
+  "pathPattern": "/api/users/*",
+  "route": {
+    "method": "GET",
+    "pathPattern": "/api/users/*",
+    "response": "mock from scope-one",
+    "status": 200,
+  },
+  "scope": "scope-one",
+}
+`;
+
+exports[`registry should only access routes in the correct scope: scope-two 1`] = `
+{
+  "matchType": "pattern",
+  "pathPattern": "/api/users/*",
+  "route": {
+    "method": "GET",
+    "pathPattern": "/api/users/*",
+    "response": "mock from scope-two",
+    "status": 200,
+  },
+  "scope": "scope-two",
+}
+`;
