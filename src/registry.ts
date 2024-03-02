@@ -1,18 +1,11 @@
+import { Static } from 'elysia';
 import { DEFAULT_SCOPE } from './const';
 import { logger } from './logger';
 import { minimatch } from 'minimatch';
+import { MockedRoute, MockedRoutes } from './dtos';
 
-type MockedRoute = {
-  pathPattern: string;
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'OPTIONS' | 'HEAD' | 'CONNECT' | 'TRACE' | 'ALL';
-  response: unknown;
-  status: number;
-  headers?: Record<string, string>;
-  contentType?: string;
-  delay?: number;
-};
-
-type MockedRoutes = MockedRoute[];
+type MockedRoute = Static<typeof MockedRoute>;
+type MockedRoutes = Static<typeof MockedRoutes>;
 
 const registry = new Map<string, MockedRoutes>();
 
