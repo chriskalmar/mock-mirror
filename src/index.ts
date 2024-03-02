@@ -1,11 +1,21 @@
 import { Elysia } from 'elysia';
 import { logger } from './logger';
-import { findMatchingRoute } from './registry';
+import { findMatchingRoute, resetRegistry } from './registry';
 import { DEFAULT_SCOPE, MOCK_MIRROR_HEADER } from './const';
 
 const app = new Elysia()
 
   .get('/', () => "Hello 👋, I'm Mock Mirror")
+
+  .post('/mock-mirror/registry/reset', () => {
+    resetRegistry();
+
+    logger.info('Registry has been reset');
+
+    return {
+      success: true,
+    };
+  })
 
   .all('*', ({ path, headers, set, request }) => {
     const scope = headers[MOCK_MIRROR_HEADER] ?? DEFAULT_SCOPE;
