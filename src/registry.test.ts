@@ -1,14 +1,14 @@
 import { beforeEach, describe, expect, it } from 'bun:test';
 import { addDefaultMockedRoutes, addMockedRoutes, findMatchingRoute, resetRegistry } from './registry';
 
+const scope = 'ff71ae5d-3112-4321-a9e1-459f72a453c0';
+
 describe('registry', () => {
   beforeEach(() => {
     resetRegistry();
   });
 
   it('should find a route via exact matching', async () => {
-    const scope = 'ff71ae5d-3112-4321-a9e1-459f72a453c0';
-
     addMockedRoutes({
       scope,
       routes: [
@@ -53,8 +53,6 @@ describe('registry', () => {
   });
 
   it('should fall back to ALL method', async () => {
-    const scope = 'ff71ae5d-3112-4321-a9e1-459f72a453c0';
-
     addMockedRoutes({
       scope,
       routes: [
@@ -68,7 +66,7 @@ describe('registry', () => {
     });
 
     const route = findMatchingRoute({ scope, path: '/catch-all', method: 'GET' });
-    expect(route).toMatchSnapshot('/');
+    expect(route).toMatchSnapshot('/catch-all');
   });
 
   it('should fall back to ALL method of default scope', async () => {
@@ -82,6 +80,46 @@ describe('registry', () => {
     ]);
 
     const route = findMatchingRoute({ scope: 'does-not-exist', path: '/catch-all', method: 'GET' });
-    expect(route).toMatchSnapshot('/');
+    expect(route).toMatchSnapshot('/catch-all');
+  });
+
+  it('should find a route via pattern matching', async () => {
+    addMockedRoutes({
+      scope,
+      routes: [
+        {
+          pathPattern: '/users/*',
+          method: 'GET',
+          response: 'any user',
+          status: 200,
+        },
+        {
+          pathPattern: '/users/12345',
+          method: 'GET',
+          response: 'user 12345',
+          status: 200,
+        },
+      ],
+    });
+
+    {
+      const route = findMatchingRoute({ scope, path: '/users', method: 'GET' });
+      expect(route).toBeUndefined();
+    }
+
+    {
+      const route = findMatchingRoute({ scope, path: '/users/', method: 'GET' });
+      expect(route).toBeUndefined();
+    }
+
+    {
+      const route = findMatchingRoute({ scope, path: '/users/777', method: 'GET' });
+      expect(route).toMatchSnapshot('/users/777');
+    }
+
+    {
+      const route = findMatchingRoute({ scope, path: '/users/12345', method: 'GET' });
+      expect(route).toMatchSnapshot('/users/12345');
+    }
   });
 });

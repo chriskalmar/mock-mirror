@@ -69,3 +69,31 @@ exports[`registry should fall back to ALL method of default scope: /catch-all 1`
   "scope": "[DEFAULT]",
 }
 `;
+
+exports[`registry should find a route via pattern matching: /users/777 1`] = `
+{
+  "matchType": "pattern",
+  "pathPattern": "/users/*",
+  "route": {
+    "method": "GET",
+    "pathPattern": "/users/*",
+    "response": "any user",
+    "status": 200,
+  },
+  "scope": "ff71ae5d-3112-4321-a9e1-459f72a453c0",
+}
+`;
+
+exports[`registry should find a route via pattern matching: /users/12345 1`] = `
+{
+  "matchType": "exact",
+  "pathPattern": "/users/12345",
+  "route": {
+    "method": "GET",
+    "pathPattern": "/users/12345",
+    "response": "user 12345",
+    "status": 200,
+  },
+  "scope": "ff71ae5d-3112-4321-a9e1-459f72a453c0",
+}
+`;
