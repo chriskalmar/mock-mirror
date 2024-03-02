@@ -223,3 +223,45 @@ exports[`registry should find a route via pattern matching with ALL method of de
   "scope": "[DEFAULT]",
 }
 `;
+
+exports[`registry should respect the order of routes: simple patterns 1`] = `
+{
+  "matchType": "pattern",
+  "pathPattern": "/api/users/*",
+  "route": {
+    "method": "GET",
+    "pathPattern": "/api/users/*",
+    "response": "any user",
+    "status": 200,
+  },
+  "scope": "ff71ae5d-3112-4321-a9e1-459f72a453c0",
+}
+`;
+
+exports[`registry should respect the order of routes: wider patterns 1`] = `
+{
+  "matchType": "pattern",
+  "pathPattern": "/api/**",
+  "route": {
+    "method": "GET",
+    "pathPattern": "/api/**",
+    "response": "any api endpoint",
+    "status": 200,
+  },
+  "scope": "ff71ae5d-3112-4321-a9e1-459f72a453c0",
+}
+`;
+
+exports[`registry should respect the order of routes: last pattern wins 1`] = `
+{
+  "matchType": "pattern",
+  "pathPattern": "/api/users/**",
+  "route": {
+    "method": "GET",
+    "pathPattern": "/api/users/**",
+    "response": "any user",
+    "status": 200,
+  },
+  "scope": "ff71ae5d-3112-4321-a9e1-459f72a453c0",
+}
+`;

@@ -211,4 +211,81 @@ describe('registry', () => {
     const route = findMatchingRoute({ scope: 'does-not-exist', path: '/api/v1/users/777', method: 'POST' });
     expect(route).toMatchSnapshot('/api/v1/users/777');
   });
+
+  it('should respect the order of routes', async () => {
+    {
+      resetRegistry();
+
+      addMockedRoutes({
+        scope,
+        routes: [
+          {
+            pathPattern: '/api/users/*',
+            method: 'GET',
+            response: 'any user',
+            status: 200,
+          },
+          {
+            pathPattern: '/api/*',
+            method: 'GET',
+            response: 'any api endpoint',
+            status: 200,
+          },
+        ],
+      });
+
+      const route = findMatchingRoute({ scope, path: '/api/users/777', method: 'GET' });
+      expect(route).toMatchSnapshot('simple patterns');
+    }
+
+    {
+      resetRegistry();
+
+      addMockedRoutes({
+        scope,
+        routes: [
+          {
+            pathPattern: '/api/users/**',
+            method: 'GET',
+            response: 'any user',
+            status: 200,
+          },
+          {
+            pathPattern: '/api/**',
+            method: 'GET',
+            response: 'any api endpoint',
+            status: 200,
+          },
+        ],
+      });
+
+      const route = findMatchingRoute({ scope, path: '/api/users/777', method: 'GET' });
+      expect(route).toMatchSnapshot('wider patterns');
+    }
+
+    {
+      resetRegistry();
+
+      addMockedRoutes({
+        scope,
+        routes: [
+          {
+            pathPattern: '/api/**',
+            method: 'GET',
+            response: 'any api endpoint',
+            status: 200,
+          },
+          {
+            pathPattern: '/api/users/**',
+            method: 'GET',
+            response: 'any user',
+            status: 200,
+          },
+        ],
+      });
+
+      const route = findMatchingRoute({ scope, path: '/api/users/777', method: 'GET' });
+      expect(route).toMatchSnapshot('last pattern wins');
+    }
+  });
 });
