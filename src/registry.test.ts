@@ -99,6 +99,24 @@ describe('registry', () => {
           response: 'user 12345',
           status: 200,
         },
+        {
+          pathPattern: '/api/**',
+          method: 'GET',
+          response: 'any api endpoint',
+          status: 200,
+        },
+        {
+          pathPattern: '/api/v1/**',
+          method: 'GET',
+          response: 'any v1 api endpoint',
+          status: 200,
+        },
+        {
+          pathPattern: '/api/v1/users/*',
+          method: 'GET',
+          response: 'any v1 user',
+          status: 200,
+        },
       ],
     });
 
@@ -120,6 +138,46 @@ describe('registry', () => {
     {
       const route = findMatchingRoute({ scope, path: '/users/12345', method: 'GET' });
       expect(route).toMatchSnapshot('/users/12345');
+    }
+
+    {
+      const route = findMatchingRoute({ scope, path: '/api', method: 'GET' });
+      expect(route).toBeUndefined();
+    }
+
+    {
+      const route = findMatchingRoute({ scope, path: '/api/', method: 'GET' });
+      expect(route).toMatchSnapshot('/api/');
+    }
+
+    {
+      const route = findMatchingRoute({ scope, path: '/api/lorem', method: 'GET' });
+      expect(route).toMatchSnapshot('/api/lorem');
+    }
+
+    {
+      const route = findMatchingRoute({ scope, path: '/api/v1', method: 'GET' });
+      expect(route).toMatchSnapshot('/api/v1');
+    }
+
+    {
+      const route = findMatchingRoute({ scope, path: '/api/v1/', method: 'GET' });
+      expect(route).toMatchSnapshot('/api/v1/');
+    }
+
+    {
+      const route = findMatchingRoute({ scope, path: '/api/v1/users', method: 'GET' });
+      expect(route).toMatchSnapshot('/api/v1/users');
+    }
+
+    {
+      const route = findMatchingRoute({ scope, path: '/api/v1/users/', method: 'GET' });
+      expect(route).toMatchSnapshot('/api/v1/users/');
+    }
+
+    {
+      const route = findMatchingRoute({ scope, path: '/api/v1/users/777', method: 'GET' });
+      expect(route).toMatchSnapshot('/api/v1/users/777');
     }
   });
 });
