@@ -293,3 +293,17 @@ exports[`registry should only access routes in the correct scope: scope-two 1`] 
   "scope": "scope-two",
 }
 `;
+
+exports[`registry should match partial paths: partial match 1`] = `
+{
+  "matchType": "pattern",
+  "pathPattern": "**/trpc/users.post",
+  "route": {
+    "method": "POST",
+    "pathPattern": "**/trpc/users.post",
+    "response": "user created",
+    "status": 200,
+  },
+  "scope": "ff71ae5d-3112-4321-a9e1-459f72a453c0",
+}
+`;

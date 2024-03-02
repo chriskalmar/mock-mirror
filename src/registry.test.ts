@@ -329,4 +329,21 @@ describe('registry', () => {
       expect(route).toBeUndefined();
     }
   });
+
+  it('should match partial paths', async () => {
+    addMockedRoutes({
+      scope,
+      routes: [
+        {
+          pathPattern: '**/trpc/users.post',
+          method: 'POST',
+          response: 'user created',
+          status: 200,
+        },
+      ],
+    });
+
+    const route = findMatchingRoute({ scope, path: '/backend/api/trpc/users.post', method: 'POST' });
+    expect(route).toMatchSnapshot('partial match');
+  });
 });
