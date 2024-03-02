@@ -73,8 +73,13 @@ export const app = new Elysia()
     const route = findMatchingRoute({ scope, path, method: request.method });
 
     if (route) {
+      const headers = route.route.headers ?? {};
+      if (route.route.contentType) {
+        headers['content-type'] = route.route.contentType;
+      }
+
       set.status = route.route.status;
-      set.headers = route.route.headers ?? {};
+      set.headers = headers;
 
       return route.route.response;
     }
