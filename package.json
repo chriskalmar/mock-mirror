@@ -6,6 +6,7 @@
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
+    "@elysiajs/eden": "0.8.1",
     "elysia": "0.8.17",
     "minimatch": "9.0.3",
     "pino": "8.19.0",
