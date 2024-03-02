@@ -180,4 +180,39 @@ describe('server', () => {
       expect(response.headers.toJSON()).toMatchSnapshot('headers');
     }
   });
+
+  it('should respond with defined delay', async () => {
+    {
+      const { data } = await api['mock-mirror'].add.post({
+        scope: 'scope-one',
+        routes: [
+          {
+            pathPattern: '/api/users/*',
+            method: 'POST',
+            response: 'user will be created',
+            status: 201,
+            contentType: 'application/json',
+            delay: 2000,
+          },
+        ],
+      });
+
+      expect(data).toMatchSnapshot('add mock route');
+    }
+
+    const start = Date.now();
+    const response = await app.handle(
+      new Request(`${serverUrl}/api/users/777`, {
+        method: 'POST',
+        headers: {
+          [MOCK_MIRROR_HEADER]: 'scope-one',
+        },
+      }),
+    );
+    const end = Date.now();
+
+    expect(end - start).toBeGreaterThanOrEqual(1000);
+    expect(response.status).toBe(201);
+    expect(await response.text()).toMatchSnapshot('mock response');
+  });
 });

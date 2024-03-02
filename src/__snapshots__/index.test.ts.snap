@@ -50,3 +50,11 @@ exports[`server should respond with defined content type: headers 1`] = `
   "x-custom-header": "custom-header-value",
 }
 `;
+
+exports[`server should respond with defined delay: add mock route 1`] = `
+{
+  "success": true,
+}
+`;
+
+exports[`server should respond with defined delay: mock response 1`] = `"user will be created"`;
