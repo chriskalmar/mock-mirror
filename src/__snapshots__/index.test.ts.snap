@@ -5,3 +5,12 @@ exports[`server should add routes to scope if provided 1`] = `
   "success": true,
 }
 `;
+
+exports[`server should be able to respond with mock: add mock route 1`] = `
+{
+  "success": true,
+}
+`;
+
+
+exports[`server should be able to respond with mock: mock response 1`] = `"any user"`;
