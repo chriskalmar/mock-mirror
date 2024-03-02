@@ -8,7 +8,7 @@ export const app = new Elysia()
 
   .get('/', () => "Hello 👋, I'm Mock Mirror")
 
-  .group('/mock-mirror', (mockMirror) => {
+  .group('/mock-mirror', (mockMirror) =>
     mockMirror
       .post('/reset', () => {
         resetRegistry();
@@ -60,10 +60,8 @@ export const app = new Elysia()
             scope: t.String(),
           }),
         },
-      );
-
-    return mockMirror;
-  })
+      ),
+  )
 
   .all('*', ({ path, headers, set, request }) => {
     const scope = headers[MOCK_MIRROR_HEADER] ?? DEFAULT_SCOPE;
