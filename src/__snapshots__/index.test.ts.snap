@@ -58,3 +58,11 @@ exports[`server should respond with defined delay: add mock route 1`] = `
 `;
 
 exports[`server should respond with defined delay: mock response 1`] = `"user will be created"`;
+
+exports[`server should respond with default scope if no scope is provided: add mock route 1`] = `
+{
+  "success": true,
+}
+`;
+
+exports[`server should respond with default scope if no scope is provided: mock response 1`] = `"user will be created"`;

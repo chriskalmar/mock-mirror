@@ -215,4 +215,31 @@ describe('server', () => {
     expect(response.status).toBe(201);
     expect(await response.text()).toMatchSnapshot('mock response');
   });
+
+  it('should respond with default scope if no scope is provided', async () => {
+    {
+      const { data } = await api['mock-mirror'].add.post({
+        routes: [
+          {
+            pathPattern: '/api/users/*',
+            method: 'POST',
+            response: 'user will be created',
+            status: 201,
+            contentType: 'application/json',
+          },
+        ],
+      });
+
+      expect(data).toMatchSnapshot('add mock route');
+    }
+
+    const response = await app.handle(
+      new Request(`${serverUrl}/api/users/777`, {
+        method: 'POST',
+      }),
+    );
+
+    expect(response.status).toBe(201);
+    expect(await response.text()).toMatchSnapshot('mock response');
+  });
 });
