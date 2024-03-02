@@ -1,6 +1,13 @@
 import { Elysia, t } from 'elysia';
 import { logger } from './logger';
-import { addDefaultMockedRoutes, addMockedRoutes, clearScope, findMatchingRoute, resetRegistry } from './registry';
+import {
+  addDefaultMockedRoutes,
+  addMockedRoutes,
+  clearScope,
+  findMatchingRoute,
+  resetRegistry,
+  stats,
+} from './registry';
 import { DEFAULT_SCOPE, MOCK_MIRROR_HEADER } from './const';
 import { MockedRoutes } from './schemas';
 
@@ -60,7 +67,9 @@ export const app = new Elysia()
             scope: t.String(),
           }),
         },
-      ),
+      )
+
+      .get('/stats', stats),
   )
 
   .all('*', async ({ path, headers, set, request }) => {

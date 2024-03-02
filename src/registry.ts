@@ -20,6 +20,11 @@ export const clearScope = (scope: string) => {
   registry.delete(scope);
 };
 
+export const stats = () => ({
+  scopes: registry.size,
+  routes: Array.from(registry.values()).reduce((acc, routes) => acc + routes.length, 0),
+});
+
 export const addMockedRoute = ({ scope, route }: { scope: string; route: MockedRoute }) => {
   const routes = registry.get(scope) || [];
 
