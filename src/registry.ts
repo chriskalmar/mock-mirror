@@ -2,7 +2,7 @@ import { Static } from 'elysia';
 import { DEFAULT_SCOPE } from './const';
 import { logger } from './logger';
 import { minimatch } from 'minimatch';
-import { MockedRoute, MockedRoutes } from './dtos';
+import { MockedRoute, MockedRoutes } from './schemas';
 
 type MockedRoute = Static<typeof MockedRoute>;
 type MockedRoutes = Static<typeof MockedRoutes>;
