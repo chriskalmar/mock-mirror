@@ -1,6 +1,6 @@
 import { Elysia, t } from 'elysia';
 import { logger } from './logger';
-import { addMockedRoutes, findMatchingRoute, resetRegistry } from './registry';
+import { addMockedRoutes, clearScope, findMatchingRoute, resetRegistry } from './registry';
 import { DEFAULT_SCOPE, MOCK_MIRROR_HEADER } from './const';
 import { MockedRoutes } from './schemas';
 
@@ -19,6 +19,7 @@ const app = new Elysia()
           success: true,
         };
       })
+
       .post(
         '/add',
         ({ body }) => {
@@ -32,6 +33,24 @@ const app = new Elysia()
           body: t.Object({
             scope: t.String(),
             routes: MockedRoutes,
+          }),
+        },
+      )
+
+      .post(
+        '/clear-scope',
+        ({ body }) => {
+          clearScope(body.scope);
+
+          logger.info(`Cleared scope: ${body.scope}`);
+
+          return {
+            success: true,
+          };
+        },
+        {
+          body: t.Object({
+            scope: t.String(),
           }),
         },
       );

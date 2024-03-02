@@ -16,6 +16,10 @@ export const resetRegistry = () => {
   registry.set(DEFAULT_SCOPE, []);
 };
 
+export const clearScope = (scope: string) => {
+  registry.delete(scope);
+};
+
 export const addMockedRoute = ({ scope, route }: { scope: string; route: MockedRoute }) => {
   const routes = registry.get(scope) || [];
 
