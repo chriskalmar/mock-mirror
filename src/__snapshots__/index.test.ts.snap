@@ -28,3 +28,11 @@ exports[`server should be able to clear scope: clear scope 1`] = `
   "success": true,
 }
 `;
+
+exports[`server should respond with defined status code and headers: add mock route 1`] = `
+{
+  "success": true,
+}
+`;
+
+exports[`server should respond with defined status code and headers: mock response 1`] = `"user will be created"`;

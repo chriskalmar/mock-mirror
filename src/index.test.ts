@@ -109,4 +109,40 @@ describe('server', () => {
       expect(response.status).toBe(404);
     }
   });
+
+  it('should respond with defined status code and headers', async () => {
+    {
+      const { data } = await api['mock-mirror'].add.post({
+        scope: 'scope-one',
+        routes: [
+          {
+            pathPattern: '/api/users/*',
+            method: 'POST',
+            response: 'user will be created',
+            status: 201,
+            headers: {
+              'x-custom-header': 'custom-header-value',
+            },
+          },
+        ],
+      });
+
+      expect(data).toMatchSnapshot('add mock route');
+    }
+
+    {
+      const response = await app.handle(
+        new Request(`${serverUrl}/api/users/777`, {
+          method: 'POST',
+          headers: {
+            [MOCK_MIRROR_HEADER]: 'scope-one',
+          },
+        }),
+      );
+
+      expect(response.status).toBe(201);
+      expect(response.headers.get('x-custom-header')).toBe('custom-header-value');
+      expect(await response.text()).toMatchSnapshot('mock response');
+    }
+  });
 });
