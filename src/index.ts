@@ -1,20 +1,42 @@
-import { Elysia } from 'elysia';
+import { Elysia, t } from 'elysia';
 import { logger } from './logger';
-import { findMatchingRoute, resetRegistry } from './registry';
+import { addMockedRoutes, findMatchingRoute, resetRegistry } from './registry';
 import { DEFAULT_SCOPE, MOCK_MIRROR_HEADER } from './const';
+import { MockedRoutes } from './schemas';
 
 const app = new Elysia()
 
   .get('/', () => "Hello 👋, I'm Mock Mirror")
 
-  .post('/mock-mirror/registry/reset', () => {
-    resetRegistry();
+  .group('/mock-mirror', (mockMirror) => {
+    mockMirror
+      .post('/reset', () => {
+        resetRegistry();
 
-    logger.info('Registry has been reset');
+        logger.info('Registry has been reset');
 
-    return {
-      success: true,
-    };
+        return {
+          success: true,
+        };
+      })
+      .post(
+        '/add',
+        ({ body }) => {
+          addMockedRoutes(body);
+
+          return {
+            success: true,
+          };
+        },
+        {
+          body: t.Object({
+            scope: t.String(),
+            routes: MockedRoutes,
+          }),
+        },
+      );
+
+    return mockMirror;
   })
 
   .all('*', ({ path, headers, set, request }) => {
