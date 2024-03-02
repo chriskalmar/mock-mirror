@@ -145,4 +145,39 @@ describe('server', () => {
       expect(await response.text()).toMatchSnapshot('mock response');
     }
   });
+
+  it('should respond with defined content type', async () => {
+    {
+      const { data } = await api['mock-mirror'].add.post({
+        scope: 'scope-one',
+        routes: [
+          {
+            pathPattern: '/api/users/*',
+            method: 'POST',
+            response: 'user will be created',
+            status: 201,
+            contentType: 'application/json',
+            headers: {
+              'x-custom-header': 'custom-header-value',
+            },
+          },
+        ],
+      });
+
+      expect(data).toMatchSnapshot('add mock route');
+    }
+
+    {
+      const response = await app.handle(
+        new Request(`${serverUrl}/api/users/777`, {
+          method: 'POST',
+          headers: {
+            [MOCK_MIRROR_HEADER]: 'scope-one',
+          },
+        }),
+      );
+
+      expect(response.headers.toJSON()).toMatchSnapshot('headers');
+    }
+  });
 });
