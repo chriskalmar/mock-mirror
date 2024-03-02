@@ -180,4 +180,21 @@ describe('registry', () => {
       expect(route).toMatchSnapshot('/api/v1/users/777');
     }
   });
+
+  it('should find a route via pattern matching with ALL method', async () => {
+    addMockedRoutes({
+      scope,
+      routes: [
+        {
+          pathPattern: '/api/**',
+          method: 'ALL',
+          response: 'any api endpoint',
+          status: 200,
+        },
+      ],
+    });
+
+    const route = findMatchingRoute({ scope, path: '/api/v1/users/777', method: 'POST' });
+    expect(route).toMatchSnapshot('/api/v1/users/777');
+  });
 });
