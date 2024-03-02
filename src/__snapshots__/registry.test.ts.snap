@@ -209,3 +209,17 @@ exports[`registry should find a route via pattern matching with ALL method: /api
   "scope": "ff71ae5d-3112-4321-a9e1-459f72a453c0",
 }
 `;
+
+exports[`registry should find a route via pattern matching with ALL method of default scope: /api/v1/users/777 1`] = `
+{
+  "matchType": "pattern",
+  "pathPattern": "/api/**",
+  "route": {
+    "method": "ALL",
+    "pathPattern": "/api/**",
+    "response": "any api endpoint",
+    "status": 200,
+  },
+  "scope": "[DEFAULT]",
+}
+`;

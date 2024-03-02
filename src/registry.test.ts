@@ -197,4 +197,18 @@ describe('registry', () => {
     const route = findMatchingRoute({ scope, path: '/api/v1/users/777', method: 'POST' });
     expect(route).toMatchSnapshot('/api/v1/users/777');
   });
+
+  it('should find a route via pattern matching with ALL method of default scope', async () => {
+    addDefaultMockedRoutes([
+      {
+        pathPattern: '/api/**',
+        method: 'ALL',
+        response: 'any api endpoint',
+        status: 200,
+      },
+    ]);
+
+    const route = findMatchingRoute({ scope: 'does-not-exist', path: '/api/v1/users/777', method: 'POST' });
+    expect(route).toMatchSnapshot('/api/v1/users/777');
+  });
 });
