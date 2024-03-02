@@ -14,3 +14,17 @@ exports[`server should be able to respond with mock: add mock route 1`] = `
 
 
 exports[`server should be able to respond with mock: mock response 1`] = `"any user"`;
+
+exports[`server should be able to clear scope: add mock route 1`] = `
+{
+  "success": true,
+}
+`;
+
+exports[`server should be able to clear scope: mock response 1`] = `"any user"`;
+
+exports[`server should be able to clear scope: clear scope 1`] = `
+{
+  "success": true,
+}
+`;

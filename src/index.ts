@@ -80,6 +80,7 @@ export const app = new Elysia()
     }
 
     set.status = 'Not Found';
+    return 'Not Found';
   })
 
   .listen(Bun.env.PORT || 3210);

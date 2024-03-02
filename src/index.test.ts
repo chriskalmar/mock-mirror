@@ -57,4 +57,56 @@ describe('server', () => {
       expect(response).toMatchSnapshot('mock response');
     }
   });
+
+  it('should be able to clear scope', async () => {
+    {
+      const { data } = await api['mock-mirror'].add.post({
+        scope: 'scope-one',
+        routes: [
+          {
+            pathPattern: '/api/users/*',
+            method: 'GET',
+            response: 'any user',
+            status: 200,
+          },
+        ],
+      });
+
+      expect(data).toMatchSnapshot('add mock route');
+    }
+
+    {
+      const response = await app
+        .handle(
+          new Request(`${serverUrl}/api/users/777`, {
+            method: 'GET',
+            headers: {
+              [MOCK_MIRROR_HEADER]: 'scope-one',
+            },
+          }),
+        )
+        .then((res) => res.text());
+
+      expect(response).toMatchSnapshot('mock response');
+    }
+
+    {
+      const { data } = await api['mock-mirror']['clear-scope'].post({ scope: 'scope-one' });
+
+      expect(data).toMatchSnapshot('clear scope');
+    }
+
+    {
+      const response = await app.handle(
+        new Request(`${serverUrl}/api/users/777`, {
+          method: 'GET',
+          headers: {
+            [MOCK_MIRROR_HEADER]: 'scope-one',
+          },
+        }),
+      );
+
+      expect(response.status).toBe(404);
+    }
+  });
 });
