@@ -63,25 +63,29 @@ export const app = new Elysia()
       ),
   )
 
-  .all('*', ({ path, headers, set, request }) => {
+  .all('*', async ({ path, headers, set, request }) => {
     const scope = headers[MOCK_MIRROR_HEADER] ?? DEFAULT_SCOPE;
 
     if (!scope) {
       logger.warn(`No Mock Mirror scope header provided for: ${path}`);
     }
 
-    const route = findMatchingRoute({ scope, path, method: request.method });
+    const found = findMatchingRoute({ scope, path, method: request.method });
 
-    if (route) {
-      const headers = route.route.headers ?? {};
-      if (route.route.contentType) {
-        headers['content-type'] = route.route.contentType;
+    if (found) {
+      const headers = found.route.headers ?? {};
+      if (found.route.contentType) {
+        headers['content-type'] = found.route.contentType;
       }
 
-      set.status = route.route.status;
+      if (found.route.delay) {
+        await new Promise((resolve) => setTimeout(resolve, found.route.delay));
+      }
+
+      set.status = found.route.status;
       set.headers = headers;
 
-      return route.route.response;
+      return found.route.response;
     }
 
     set.status = 'Not Found';
