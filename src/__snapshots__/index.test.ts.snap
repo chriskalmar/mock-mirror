@@ -1,0 +1,7 @@
+// Bun Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`server should add routes to scope if provided 1`] = `
+{
+  "success": true,
+}
+`;
