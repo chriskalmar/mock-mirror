@@ -2,10 +2,7 @@ import { Static } from 'elysia';
 import { DEFAULT_SCOPE } from './const';
 import { logger } from './logger';
 import { minimatch } from 'minimatch';
-import { MockedRoute, MockedRoutes } from './schemas';
-
-type MockedRoute = Static<typeof MockedRoute>;
-type MockedRoutes = Static<typeof MockedRoutes>;
+import { MockedRoute, MockedRoutes } from './types';
 
 const registry = new Map<string, MockedRoutes>();
 
