@@ -25,7 +25,13 @@ export const stats = () => ({
 export const addMockedRoute = ({ scope, route }: { scope: string; route: MockedRoute }) => {
   const routes = registry.get(scope) || [];
 
-  registry.set(scope, [route, ...routes]);
+  const newRoute: MockedRoute = {
+    method: 'ALL',
+    status: 200,
+    ...route,
+  };
+
+  registry.set(scope, [newRoute, ...routes]);
 
   logger.info(`Added new route to scope ${scope}: ${route.method} ${route.pathPattern}`);
 };
