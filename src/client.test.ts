@@ -1,9 +1,8 @@
 import { beforeEach, describe, expect, it } from 'bun:test';
-import { edenTreaty } from '@elysiajs/eden';
+import { Elysia } from 'elysia';
 import { app } from '.';
 import { MOCK_MIRROR_HEADER } from './const';
 import { createMockMirror } from './client';
-import { Elysia, t } from 'elysia';
 
 const serverUrl = `http://localhost:${app.server?.port}`;
 
@@ -35,7 +34,19 @@ describe('client', () => {
     await mockMirror(({ reset }) => reset);
   });
 
-  it('should be able to mock a service behind a backend', async () => {
+  it('should fail if mocks are not provided', async () => {
+    await mockMirror(async ({ scope }) => {
+      const response = await fetch(`${testBackendUrl}/api/users/777`, {
+        headers: {
+          [MOCK_MIRROR_HEADER]: scope,
+        },
+      });
+
+      expect(response.status).toBe(404);
+    });
+  });
+
+  it('should be able to mock the service behind the backend', async () => {
     await mockMirror(async ({ addRoute, scope }) => {
       await addRoute({
         pathPattern: '/api/users/*',
@@ -49,6 +60,34 @@ describe('client', () => {
       });
 
       expect(await response.text()).toBe('This is a mock response for the user');
+    });
+  });
+
+  it('should be able to mock the service behind the backend on the go', async () => {
+    await mockMirror(async ({ addRoute, scope }) => {
+      {
+        const response = await fetch(`${testBackendUrl}/api/users/777`, {
+          headers: {
+            [MOCK_MIRROR_HEADER]: scope,
+          },
+        });
+
+        expect(response.status).toBe(404);
+      }
+      {
+        await addRoute({
+          pathPattern: '/api/users/*',
+          response: 'This is a mock response for the user',
+        });
+
+        const response = await fetch(`${testBackendUrl}/api/users/777`, {
+          headers: {
+            [MOCK_MIRROR_HEADER]: scope,
+          },
+        });
+
+        expect(await response.text()).toBe('This is a mock response for the user');
+      }
     });
   });
 });
