@@ -38,6 +38,56 @@ describe('registry', () => {
     }
   });
 
+  it('should use defaults for route setup', async () => {
+    addMockedRoutes({
+      scope,
+      routes: [
+        {
+          pathPattern: '/should-be-200',
+          method: 'POST',
+          response: 'should-be-200',
+          status: 200,
+        },
+        {
+          pathPattern: '/should-be-ALL',
+          response: 'should-be-ALL',
+          status: 201,
+        },
+        {
+          pathPattern: '/should-be-200-and-ALL',
+          response: 'should-be-200-and-ALL',
+        },
+      ],
+    });
+
+    {
+      const route = findMatchingRoute({ scope, path: '/should-be-200', method: 'GET' });
+      expect(route).toBeUndefined();
+    }
+    {
+      const route = findMatchingRoute({ scope, path: '/should-be-200', method: 'POST' });
+      expect(route).toMatchSnapshot('/should-be-200');
+    }
+
+    {
+      const route = findMatchingRoute({ scope, path: '/should-be-ALL', method: 'GET' });
+      expect(route).toMatchSnapshot('/should-be-ALL (GET)');
+    }
+    {
+      const route = findMatchingRoute({ scope, path: '/should-be-ALL', method: 'POST' });
+      expect(route).toMatchSnapshot('/should-be-ALL (POST)');
+    }
+
+    {
+      const route = findMatchingRoute({ scope, path: '/should-be-200-and-ALL', method: 'GET' });
+      expect(route).toMatchSnapshot('/should-be-200-and-ALL (GET)');
+    }
+    {
+      const route = findMatchingRoute({ scope, path: '/should-be-200-and-ALL', method: 'POST' });
+      expect(route).toMatchSnapshot('/should-be-200-and-ALL (POST)');
+    }
+  });
+
   it('should fall back to default scope', async () => {
     addDefaultMockedRoutes([
       {

@@ -307,3 +307,73 @@ exports[`registry should match partial paths: partial match 1`] = `
   "scope": "ff71ae5d-3112-4321-a9e1-459f72a453c0",
 }
 `;
+
+exports[`registry should use defaults for route setup: /should-be-200 1`] = `
+{
+  "matchType": "exact",
+  "pathPattern": "/should-be-200",
+  "route": {
+    "method": "POST",
+    "pathPattern": "/should-be-200",
+    "response": "should-be-200",
+    "status": 200,
+  },
+  "scope": "ff71ae5d-3112-4321-a9e1-459f72a453c0",
+}
+`;
+
+exports[`registry should use defaults for route setup: /should-be-ALL (GET) 1`] = `
+{
+  "matchType": "exact",
+  "pathPattern": "/should-be-ALL",
+  "route": {
+    "method": "ALL",
+    "pathPattern": "/should-be-ALL",
+    "response": "should-be-ALL",
+    "status": 201,
+  },
+  "scope": "ff71ae5d-3112-4321-a9e1-459f72a453c0",
+}
+`;
+
+exports[`registry should use defaults for route setup: /should-be-ALL (POST) 1`] = `
+{
+  "matchType": "exact",
+  "pathPattern": "/should-be-ALL",
+  "route": {
+    "method": "ALL",
+    "pathPattern": "/should-be-ALL",
+    "response": "should-be-ALL",
+    "status": 201,
+  },
+  "scope": "ff71ae5d-3112-4321-a9e1-459f72a453c0",
+}
+`;
+
+exports[`registry should use defaults for route setup: /should-be-200-and-ALL (GET) 1`] = `
+{
+  "matchType": "exact",
+  "pathPattern": "/should-be-200-and-ALL",
+  "route": {
+    "method": "ALL",
+    "pathPattern": "/should-be-200-and-ALL",
+    "response": "should-be-200-and-ALL",
+    "status": 200,
+  },
+  "scope": "ff71ae5d-3112-4321-a9e1-459f72a453c0",
+}
+`;
+
+exports[`registry should use defaults for route setup: /should-be-200-and-ALL (POST) 1`] = `
+{
+  "matchType": "exact",
+  "pathPattern": "/should-be-200-and-ALL",
+  "route": {
+    "method": "ALL",
+    "pathPattern": "/should-be-200-and-ALL",
+    "response": "should-be-200-and-ALL",
+    "status": 200,
+  },
+  "scope": "ff71ae5d-3112-4321-a9e1-459f72a453c0",
+}
+`;
