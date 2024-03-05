@@ -1,7 +1,6 @@
 import { edenTreaty } from '@elysiajs/eden';
 import { app } from '.';
 import { randomUUID } from 'crypto';
-import { MOCK_MIRROR_HEADER } from './const';
 import { MockedRoute, MockedRoutes } from './types';
 
 export const createMockMirror = async ({
@@ -30,6 +29,7 @@ export const createMockMirror = async ({
     reset: async () => {
       return await api['mock-mirror'].reset.post();
     },
+    scope,
   });
 
   return (
@@ -47,15 +47,3 @@ export const createMockMirror = async ({
     );
   };
 };
-
-const mockMirror = await createMockMirror({});
-
-it('should be able to clear scope', async () => {
-  await mockMirror(async ({ addRoute }) => {
-    await addRoute({
-      pathPattern: '/api/users/*',
-      method: 'GET',
-      response: 'any',
-    });
-  });
-});
