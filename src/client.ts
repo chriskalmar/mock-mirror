@@ -4,8 +4,18 @@ import { randomUUID } from 'crypto';
 import { MOCK_MIRROR_HEADER } from './const';
 import { MockedRoute, MockedRoutes } from './types';
 
-export const createMockMirror = async ({ mockMirrorUrl }: { mockMirrorUrl?: string }) => {
+export const createMockMirror = async ({
+  mockMirrorUrl,
+  defaultRoutes,
+}: {
+  mockMirrorUrl?: string;
+  defaultRoutes?: MockedRoutes;
+}) => {
   const api = edenTreaty<typeof app>(mockMirrorUrl ?? Bun.env.MOCK_MIRROR_URL ?? 'http://localhost:3210');
+
+  if (defaultRoutes) {
+    await api['mock-mirror'].add.post({ routes: defaultRoutes });
+  }
 
   const getTools = ({ scope }: { scope: string }) => ({
     addRoute: async (route: MockedRoute) => {
