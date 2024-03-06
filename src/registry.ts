@@ -1,8 +1,7 @@
-import { Static } from 'elysia';
+import { minimatch } from 'minimatch';
 import { DEFAULT_SCOPE } from './const';
 import { logger } from './logger';
-import { minimatch } from 'minimatch';
-import { MockedRoute, MockedRoutes } from './types';
+import { type MockedRoute, type MockedRoutes } from './types';
 
 const registry = new Map<string, MockedRoutes>();
 
@@ -19,11 +18,11 @@ export const clearScope = (scope: string) => {
 
 export const stats = () => ({
   scopes: registry.size,
-  routes: Array.from(registry.values()).reduce((acc, routes) => acc + routes.length, 0),
+  routes: Array.from(registry.values()).reduce((accumulator, routes) => accumulator + routes.length, 0),
 });
 
 export const addMockedRoute = ({ scope, route }: { scope: string; route: MockedRoute }) => {
-  const routes = registry.get(scope) || [];
+  const routes = registry.get(scope) ?? [];
 
   const newRoute: MockedRoute = {
     method: 'ALL',
@@ -36,8 +35,8 @@ export const addMockedRoute = ({ scope, route }: { scope: string; route: MockedR
   logger.info(`Added new route to scope ${scope}: ${route.method} ${route.pathPattern}`);
 };
 
-export const addMockedRoutes = ({ scope, routes }: { scope: string; routes: MockedRoute[] }) => {
-  routes.forEach((route) => addMockedRoute({ scope, route }));
+export const addMockedRoutes = ({ scope, routes }: { scope: string; routes: MockedRoutes }) => {
+  for (const route of routes) addMockedRoute({ scope, route });
 };
 
 export const addDefaultMockedRoutes = (routes: MockedRoute[]) => {

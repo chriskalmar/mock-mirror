@@ -9,7 +9,7 @@ import {
   stats,
 } from './registry';
 import { DEFAULT_SCOPE, MOCK_MIRROR_HEADER } from './const';
-import { MockedRoutes } from './schemas';
+import { MockedRoutesDto } from './schemas';
 
 export const app = new Elysia()
 
@@ -46,7 +46,7 @@ export const app = new Elysia()
         {
           body: t.Object({
             scope: t.Optional(t.String()),
-            routes: MockedRoutes,
+            routes: MockedRoutesDto,
           }),
         },
       )
@@ -88,7 +88,9 @@ export const app = new Elysia()
       }
 
       if (found.route.delay) {
-        await new Promise((resolve) => setTimeout(resolve, found.route.delay));
+        await new Promise((resolve) => {
+          setTimeout(resolve, found.route.delay);
+        });
       }
 
       set.status = found.route.status;
@@ -101,6 +103,6 @@ export const app = new Elysia()
     return 'Not Found';
   })
 
-  .listen(Bun.env.PORT || 3210);
+  .listen(Bun.env.PORT ?? 3210);
 
 logger.info(`🪞 Mock Mirror is running at ${app.server?.hostname}:${app.server?.port}`);

@@ -1,7 +1,7 @@
+import { randomUUID } from 'node:crypto';
 import { edenTreaty } from '@elysiajs/eden';
-import { app } from '.';
-import { randomUUID } from 'crypto';
-import { MockedRoute, MockedRoutes } from './types';
+import type { MockedRoute, MockedRoutes } from './types';
+import type { app } from '.';
 
 export const createMockMirror = async ({
   mockMirrorUrl,
@@ -17,17 +17,17 @@ export const createMockMirror = async ({
   }
 
   const getTools = ({ scope }: { scope: string }) => ({
-    addRoute: async (route: MockedRoute) => {
-      return await api['mock-mirror'].add.post({ scope, routes: [route] });
+    async addRoute(route: MockedRoute) {
+      return api['mock-mirror'].add.post({ scope, routes: [route] });
     },
-    addRoutes: async (routes: MockedRoutes) => {
-      return await api['mock-mirror'].add.post({ scope, routes });
+    async addRoutes(routes: MockedRoutes) {
+      return api['mock-mirror'].add.post({ scope, routes });
     },
-    clearScope: async () => {
-      return await api['mock-mirror']['clear-scope'].post({ scope });
+    async clearScope() {
+      return api['mock-mirror']['clear-scope'].post({ scope });
     },
-    reset: async () => {
-      return await api['mock-mirror'].reset.post();
+    async reset() {
+      return api['mock-mirror'].reset.post();
     },
     scope,
   });

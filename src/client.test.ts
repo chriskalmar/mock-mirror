@@ -1,12 +1,12 @@
 import { beforeEach, describe, expect, it } from 'bun:test';
 import { Elysia } from 'elysia';
-import { app } from '.';
 import { MOCK_MIRROR_HEADER } from './const';
 import { createMockMirror } from './client';
+import { app } from '.';
 
 const serverUrl = `http://localhost:${app.server?.port}`;
 
-let mockMirror = await createMockMirror({ mockMirrorUrl: serverUrl });
+const mockMirror = await createMockMirror({ mockMirrorUrl: serverUrl });
 
 const testServiceUrl = 'http://this-service-does-not-exist.local';
 
@@ -15,14 +15,14 @@ const testBackend = new Elysia()
     const headers = originalHeaders as Record<string, string>;
 
     const api = headers[MOCK_MIRROR_HEADER]
-      ? (url: string) => fetch(`${serverUrl}${url}`, { headers }) // this is the mock
-      : (url: string) => fetch(`${testServiceUrl}${url}`, { headers }); // this would be the actual service, but we're mocking it
+      ? async (url: string) => fetch(`${serverUrl}${url}`, { headers }) // This is the mock
+      : async (url: string) => fetch(`${testServiceUrl}${url}`, { headers }); // This would be the actual service, but we're mocking it
 
     return {
       api,
     };
   })
-  .get('/api/users/:id', ({ params, api }) => {
+  .get('/api/users/:id', async ({ params, api }) => {
     return api(`/api/users/${params.id}`);
   })
   .listen(9898);
@@ -74,6 +74,7 @@ describe('client', () => {
 
         expect(response.status).toBe(404);
       }
+
       {
         await addRoute({
           pathPattern: '/api/users/*',

@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'bun:test';
 import { edenTreaty } from '@elysiajs/eden';
-import { app } from '.';
 import { MOCK_MIRROR_HEADER } from './const';
+import { app } from '.';
 
 const serverUrl = `http://localhost:${app.server?.port}`;
 const api = edenTreaty<typeof app>(serverUrl);
@@ -52,7 +52,7 @@ describe('server', () => {
             },
           }),
         )
-        .then((res) => res.text());
+        .then(async (result) => result.text());
 
       expect(response).toMatchSnapshot('mock response');
     }
@@ -85,7 +85,7 @@ describe('server', () => {
             },
           }),
         )
-        .then((res) => res.text());
+        .then(async (result) => result.text());
 
       expect(response).toMatchSnapshot('mock response');
     }

@@ -1,6 +1,6 @@
 import { t } from 'elysia';
 
-export const MockedRoute = t.Object({
+export const MockedRouteDto = t.Object({
   pathPattern: t.String({ minLength: 1 }),
   method: t.Optional(
     t.Union([
@@ -23,4 +23,4 @@ export const MockedRoute = t.Object({
   delay: t.Optional(t.Number()),
 });
 
-export const MockedRoutes = t.Array(MockedRoute);
+export const MockedRoutesDto = t.Array(MockedRouteDto);

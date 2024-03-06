@@ -29,11 +29,17 @@ describe('registry', () => {
 
     {
       const route = findMatchingRoute({ scope, path: '/', method: 'GET' });
+
       expect(route).toMatchSnapshot('/');
     }
 
     {
-      const route = findMatchingRoute({ scope, path: '/lorem/ipsum', method: 'POST' });
+      const route = findMatchingRoute({
+        scope,
+        path: '/lorem/ipsum',
+        method: 'POST',
+      });
+
       expect(route).toMatchSnapshot('/lorem/ipsum');
     }
   });
@@ -61,29 +67,62 @@ describe('registry', () => {
     });
 
     {
-      const route = findMatchingRoute({ scope, path: '/should-be-200', method: 'GET' });
+      const route = findMatchingRoute({
+        scope,
+        path: '/should-be-200',
+        method: 'GET',
+      });
+
       expect(route).toBeUndefined();
     }
+
     {
-      const route = findMatchingRoute({ scope, path: '/should-be-200', method: 'POST' });
+      const route = findMatchingRoute({
+        scope,
+        path: '/should-be-200',
+        method: 'POST',
+      });
+
       expect(route).toMatchSnapshot('/should-be-200');
     }
 
     {
-      const route = findMatchingRoute({ scope, path: '/should-be-ALL', method: 'GET' });
+      const route = findMatchingRoute({
+        scope,
+        path: '/should-be-ALL',
+        method: 'GET',
+      });
+
       expect(route).toMatchSnapshot('/should-be-ALL (GET)');
     }
+
     {
-      const route = findMatchingRoute({ scope, path: '/should-be-ALL', method: 'POST' });
+      const route = findMatchingRoute({
+        scope,
+        path: '/should-be-ALL',
+        method: 'POST',
+      });
+
       expect(route).toMatchSnapshot('/should-be-ALL (POST)');
     }
 
     {
-      const route = findMatchingRoute({ scope, path: '/should-be-200-and-ALL', method: 'GET' });
+      const route = findMatchingRoute({
+        scope,
+        path: '/should-be-200-and-ALL',
+        method: 'GET',
+      });
+
       expect(route).toMatchSnapshot('/should-be-200-and-ALL (GET)');
     }
+
     {
-      const route = findMatchingRoute({ scope, path: '/should-be-200-and-ALL', method: 'POST' });
+      const route = findMatchingRoute({
+        scope,
+        path: '/should-be-200-and-ALL',
+        method: 'POST',
+      });
+
       expect(route).toMatchSnapshot('/should-be-200-and-ALL (POST)');
     }
   });
@@ -98,7 +137,12 @@ describe('registry', () => {
       },
     ]);
 
-    const route = findMatchingRoute({ scope: 'does-not-exist', path: '/fallback', method: 'GET' });
+    const route = findMatchingRoute({
+      scope: 'does-not-exist',
+      path: '/fallback',
+      method: 'GET',
+    });
+
     expect(route).toMatchSnapshot('/fallback');
   });
 
@@ -115,7 +159,12 @@ describe('registry', () => {
       ],
     });
 
-    const route = findMatchingRoute({ scope, path: '/catch-all', method: 'GET' });
+    const route = findMatchingRoute({
+      scope,
+      path: '/catch-all',
+      method: 'GET',
+    });
+
     expect(route).toMatchSnapshot('/catch-all');
   });
 
@@ -129,7 +178,12 @@ describe('registry', () => {
       },
     ]);
 
-    const route = findMatchingRoute({ scope: 'does-not-exist', path: '/catch-all', method: 'GET' });
+    const route = findMatchingRoute({
+      scope: 'does-not-exist',
+      path: '/catch-all',
+      method: 'GET',
+    });
+
     expect(route).toMatchSnapshot('/catch-all');
   });
 
@@ -172,61 +226,109 @@ describe('registry', () => {
 
     {
       const route = findMatchingRoute({ scope, path: '/users', method: 'GET' });
+
       expect(route).toBeUndefined();
     }
 
     {
-      const route = findMatchingRoute({ scope, path: '/users/', method: 'GET' });
+      const route = findMatchingRoute({
+        scope,
+        path: '/users/',
+        method: 'GET',
+      });
+
       expect(route).toBeUndefined();
     }
 
     {
-      const route = findMatchingRoute({ scope, path: '/users/777', method: 'GET' });
+      const route = findMatchingRoute({
+        scope,
+        path: '/users/777',
+        method: 'GET',
+      });
+
       expect(route).toMatchSnapshot('/users/777');
     }
 
     {
-      const route = findMatchingRoute({ scope, path: '/users/12345', method: 'GET' });
+      const route = findMatchingRoute({
+        scope,
+        path: '/users/12345',
+        method: 'GET',
+      });
+
       expect(route).toMatchSnapshot('/users/12345');
     }
 
     {
       const route = findMatchingRoute({ scope, path: '/api', method: 'GET' });
+
       expect(route).toBeUndefined();
     }
 
     {
       const route = findMatchingRoute({ scope, path: '/api/', method: 'GET' });
+
       expect(route).toMatchSnapshot('/api/');
     }
 
     {
-      const route = findMatchingRoute({ scope, path: '/api/lorem', method: 'GET' });
+      const route = findMatchingRoute({
+        scope,
+        path: '/api/lorem',
+        method: 'GET',
+      });
+
       expect(route).toMatchSnapshot('/api/lorem');
     }
 
     {
-      const route = findMatchingRoute({ scope, path: '/api/v1', method: 'GET' });
+      const route = findMatchingRoute({
+        scope,
+        path: '/api/v1',
+        method: 'GET',
+      });
+
       expect(route).toMatchSnapshot('/api/v1');
     }
 
     {
-      const route = findMatchingRoute({ scope, path: '/api/v1/', method: 'GET' });
+      const route = findMatchingRoute({
+        scope,
+        path: '/api/v1/',
+        method: 'GET',
+      });
+
       expect(route).toMatchSnapshot('/api/v1/');
     }
 
     {
-      const route = findMatchingRoute({ scope, path: '/api/v1/users', method: 'GET' });
+      const route = findMatchingRoute({
+        scope,
+        path: '/api/v1/users',
+        method: 'GET',
+      });
+
       expect(route).toMatchSnapshot('/api/v1/users');
     }
 
     {
-      const route = findMatchingRoute({ scope, path: '/api/v1/users/', method: 'GET' });
+      const route = findMatchingRoute({
+        scope,
+        path: '/api/v1/users/',
+        method: 'GET',
+      });
+
       expect(route).toMatchSnapshot('/api/v1/users/');
     }
 
     {
-      const route = findMatchingRoute({ scope, path: '/api/v1/users/777', method: 'GET' });
+      const route = findMatchingRoute({
+        scope,
+        path: '/api/v1/users/777',
+        method: 'GET',
+      });
+
       expect(route).toMatchSnapshot('/api/v1/users/777');
     }
   });
@@ -244,7 +346,12 @@ describe('registry', () => {
       ],
     });
 
-    const route = findMatchingRoute({ scope, path: '/api/v1/users/777', method: 'POST' });
+    const route = findMatchingRoute({
+      scope,
+      path: '/api/v1/users/777',
+      method: 'POST',
+    });
+
     expect(route).toMatchSnapshot('/api/v1/users/777');
   });
 
@@ -258,7 +365,12 @@ describe('registry', () => {
       },
     ]);
 
-    const route = findMatchingRoute({ scope: 'does-not-exist', path: '/api/v1/users/777', method: 'POST' });
+    const route = findMatchingRoute({
+      scope: 'does-not-exist',
+      path: '/api/v1/users/777',
+      method: 'POST',
+    });
+
     expect(route).toMatchSnapshot('/api/v1/users/777');
   });
 
@@ -284,7 +396,12 @@ describe('registry', () => {
         ],
       });
 
-      const route = findMatchingRoute({ scope, path: '/api/users/777', method: 'GET' });
+      const route = findMatchingRoute({
+        scope,
+        path: '/api/users/777',
+        method: 'GET',
+      });
+
       expect(route).toMatchSnapshot('simple patterns');
     }
 
@@ -309,7 +426,12 @@ describe('registry', () => {
         ],
       });
 
-      const route = findMatchingRoute({ scope, path: '/api/users/777', method: 'GET' });
+      const route = findMatchingRoute({
+        scope,
+        path: '/api/users/777',
+        method: 'GET',
+      });
+
       expect(route).toMatchSnapshot('wider patterns');
     }
 
@@ -334,7 +456,12 @@ describe('registry', () => {
         ],
       });
 
-      const route = findMatchingRoute({ scope, path: '/api/users/777', method: 'GET' });
+      const route = findMatchingRoute({
+        scope,
+        path: '/api/users/777',
+        method: 'GET',
+      });
+
       expect(route).toMatchSnapshot('last pattern wins');
     }
   });
@@ -365,17 +492,32 @@ describe('registry', () => {
     });
 
     {
-      const route = findMatchingRoute({ scope: 'scope-one', path: '/api/users/777', method: 'GET' });
+      const route = findMatchingRoute({
+        scope: 'scope-one',
+        path: '/api/users/777',
+        method: 'GET',
+      });
+
       expect(route).toMatchSnapshot('scope-one');
     }
 
     {
-      const route = findMatchingRoute({ scope: 'scope-two', path: '/api/users/777', method: 'GET' });
+      const route = findMatchingRoute({
+        scope: 'scope-two',
+        path: '/api/users/777',
+        method: 'GET',
+      });
+
       expect(route).toMatchSnapshot('scope-two');
     }
 
     {
-      const route = findMatchingRoute({ scope: 'scope-three', path: '/api/users/777', method: 'GET' });
+      const route = findMatchingRoute({
+        scope: 'scope-three',
+        path: '/api/users/777',
+        method: 'GET',
+      });
+
       expect(route).toBeUndefined();
     }
   });
@@ -393,7 +535,12 @@ describe('registry', () => {
       ],
     });
 
-    const route = findMatchingRoute({ scope, path: '/backend/api/trpc/users.post', method: 'POST' });
+    const route = findMatchingRoute({
+      scope,
+      path: '/backend/api/trpc/users.post',
+      method: 'POST',
+    });
+
     expect(route).toMatchSnapshot('partial match');
   });
 });

@@ -1,5 +1,5 @@
-import { Static } from 'elysia';
-import { MockedRoute, MockedRoutes } from './schemas';
+import { type Static } from 'elysia';
+import { type MockedRouteDto, type MockedRoutesDto } from './schemas';
 
-export type MockedRoute = Static<typeof MockedRoute>;
-export type MockedRoutes = Static<typeof MockedRoutes>;
+export type MockedRoute = Static<typeof MockedRouteDto>;
+export type MockedRoutes = Static<typeof MockedRoutesDto>;
