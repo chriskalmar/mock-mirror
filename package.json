@@ -3,6 +3,7 @@
   "version": "1.0.50",
   "scripts": {
     "test": "bun test",
+    "lint": "xo",
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
@@ -14,12 +15,34 @@
   },
   "devDependencies": {
     "bun-types": "latest",
-    "prettier": "^3.2.5"
+    "prettier": "^3.2.5",
+    "xo": "0.57.0"
   },
   "module": "src/index.js",
   "prettier": {
-    "printWidth": 120,
     "singleQuote": true,
-    "trailingComma": "all"
+    "useTabs": false,
+    "trailingComma": "all",
+    "printWidth": 120,
+    "bracketSpacing": true
+  },
+  "xo": {
+    "space": true,
+    "env": "node",
+    "singleQuote": true,
+    "prettier": true,
+    "rules": {
+      "@typescript-eslint/object-curly-spacing": "off",
+      "@typescript-eslint/naming-convention": "off",
+      "new-cap": "off",
+      "import/extensions": [
+        "error",
+        "ignorePackages",
+        {
+          "js": "never",
+          "ts": "never"
+        }
+      ]
+    }
   }
 }
