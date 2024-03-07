@@ -9,7 +9,7 @@
     "test": "bun test",
     "lint": "xo",
     "dev": "bun run --watch src/index.ts",
-    "release": "np"
+    "release": "bunx np"
   },
   "dependencies": {
     "@elysiajs/eden": "0.8.1",
