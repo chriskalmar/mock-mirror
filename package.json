@@ -1,10 +1,15 @@
 {
   "name": "mock-mirror",
-  "version": "1.0.50",
+  "version": "0.1.0",
+  "main": "dist/",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "test": "bun test",
     "lint": "xo",
-    "dev": "bun run --watch src/index.ts"
+    "dev": "bun run --watch src/index.ts",
+    "release": "np"
   },
   "dependencies": {
     "@elysiajs/eden": "0.8.1",
@@ -14,6 +19,7 @@
     "pino-pretty": "10.3.1"
   },
   "devDependencies": {
+    "bun-plugin-dts": "^0.2.1",
     "bun-types": "latest",
     "prettier": "^3.2.5",
     "xo": "0.57.0"
