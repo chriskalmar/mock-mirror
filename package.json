@@ -1,13 +1,15 @@
 {
   "name": "mock-mirror",
   "version": "0.1.1",
-  "main": "dist/",
+  "main": "dist/src/client.js",
   "files": [
-    "dist"
+    "dist/src"
   ],
+  "types": "dist/src/client.d.ts",
   "scripts": {
     "test": "bun test",
     "lint": "xo",
+    "build": "bunx tsc",
     "dev": "bun run --watch src/index.ts",
     "release": "bunx np"
   },
