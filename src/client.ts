@@ -3,17 +3,17 @@ import { edenTreaty } from '@elysiajs/eden';
 import type { MockedRoute, MockedRoutes } from './types';
 import type { app } from '.';
 
-export const createMockMirror = async ({
+export const createMockMirror = ({
   mockMirrorUrl,
   defaultRoutes,
 }: {
   mockMirrorUrl?: string;
   defaultRoutes?: MockedRoutes;
 }) => {
-  const api = edenTreaty<typeof app>(mockMirrorUrl ?? Bun.env.MOCK_MIRROR_URL ?? 'http://localhost:3210');
+  const api = edenTreaty<typeof app>(mockMirrorUrl ?? Bun.env.MOCK_MIRROR_URL ?? 'http://localhost:3210', {});
 
   if (defaultRoutes) {
-    await api['mock-mirror'].add.post({ routes: defaultRoutes });
+    void api['mock-mirror'].add.post({ routes: defaultRoutes });
   }
 
   const getTools = ({ scope }: { scope: string }) => ({
