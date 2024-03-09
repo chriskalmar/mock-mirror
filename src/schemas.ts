@@ -1,26 +1,26 @@
-import { t } from 'elysia';
+import { z } from 'zod';
 
-export const MockedRouteDto = t.Object({
-  pathPattern: t.String({ minLength: 1 }),
-  method: t.Optional(
-    t.Union([
-      t.Literal('GET'),
-      t.Literal('POST'),
-      t.Literal('PUT'),
-      t.Literal('DELETE'),
-      t.Literal('PATCH'),
-      t.Literal('OPTIONS'),
-      t.Literal('HEAD'),
-      t.Literal('CONNECT'),
-      t.Literal('TRACE'),
-      t.Literal('ALL'),
+export const MockedRouteDto = z.object({
+  pathPattern: z.string().min(1),
+  method: z.optional(
+    z.union([
+      z.literal('GET'),
+      z.literal('POST'),
+      z.literal('PUT'),
+      z.literal('DELETE'),
+      z.literal('PATCH'),
+      z.literal('OPTIONS'),
+      z.literal('HEAD'),
+      z.literal('CONNECT'),
+      z.literal('TRACE'),
+      z.literal('ALL'),
     ]),
   ),
-  response: t.Unknown(),
-  status: t.Optional(t.Number()),
-  headers: t.Optional(t.Record(t.String(), t.String())),
-  contentType: t.Optional(t.String()),
-  delay: t.Optional(t.Number()),
+  response: z.unknown(),
+  status: z.optional(z.number()),
+  headers: z.optional(z.record(z.string(), z.string())),
+  contentType: z.optional(z.string()),
+  delay: z.optional(z.number()),
 });
 
-export const MockedRoutesDto = t.Array(MockedRouteDto);
+export const MockedRoutesDto = z.array(MockedRouteDto);
