@@ -10,7 +10,7 @@
     "test": "bun test",
     "lint": "xo",
     "build": "bunx tsc",
-    "dev": "bun run --watch src/index.ts",
+    "dev": "bun run --hot src/index.ts",
     "release": "bunx np"
   },
   "dependencies": {
@@ -45,6 +45,7 @@
       "@typescript-eslint/naming-convention": "off",
       "new-cap": "off",
       "unicorn/prevent-abbreviations": "off",
+      "import/no-anonymous-default-export": "off",
       "import/extensions": [
         "error",
         "ignorePackages",
