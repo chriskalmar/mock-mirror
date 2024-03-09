@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
-import { edenTreaty } from '@elysiajs/eden';
+import { hc } from 'hono/client';
 import type { MockedRoute, MockedRoutes } from './types';
-import type { app } from '.';
+import type { MockMirrorRoutesType } from '.';
 
 export const createMockMirror = ({
   mockMirrorUrl,
@@ -10,24 +10,24 @@ export const createMockMirror = ({
   mockMirrorUrl?: string;
   defaultRoutes?: MockedRoutes;
 }) => {
-  const api = edenTreaty<typeof app>(mockMirrorUrl ?? Bun.env.MOCK_MIRROR_URL ?? 'http://localhost:3210', {});
+  const client = hc<MockMirrorRoutesType>(mockMirrorUrl ?? Bun.env.MOCK_MIRROR_URL ?? 'http://localhost:3210');
 
   if (defaultRoutes) {
-    void api['mock-mirror'].add.post({ routes: defaultRoutes });
+    void client.add.$post({ json: { routes: defaultRoutes } });
   }
 
   const getTools = ({ scope }: { scope: string }) => ({
     async addRoute(route: MockedRoute) {
-      return api['mock-mirror'].add.post({ scope, routes: [route] });
+      return client.add.$post({ json: { scope, routes: [route] } });
     },
     async addRoutes(routes: MockedRoutes) {
-      return api['mock-mirror'].add.post({ scope, routes });
+      return client.add.$post({ json: { scope, routes } });
     },
     async clearScope() {
-      return api['mock-mirror']['clear-scope'].post({ scope });
+      return client['clear-scope'].$post({ json: { scope } });
     },
     async reset() {
-      return api['mock-mirror'].reset.post();
+      return client.reset.$post();
     },
     scope,
   });
