@@ -4,27 +4,13 @@ import { testClient } from 'hono/testing';
 import type { StatusCode } from 'hono/utils/http-status';
 import { MOCK_MIRROR_HEADER } from './const';
 import { createMockMirror } from './client';
-import server, { app } from '.';
+import server from '.';
 
-const serverUrl = `http://localhost:3210`;
+const serverUrl = `http://localhost:3211`;
 
 Bun.serve({
   ...server,
-  port: 3210,
-});
-
-void testClient(app)['mock-mirror'].add.$post({
-  json: {
-    scope: 'scope-one',
-    routes: [
-      {
-        pathPattern: '/api/users/ffff',
-        method: 'GET',
-        response: 'any user',
-        status: 200,
-      },
-    ],
-  },
+  port: 3211,
 });
 
 const mockMirror = createMockMirror({
