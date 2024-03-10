@@ -72,7 +72,7 @@ const mockMirrorRoutes = new Hono()
   )
   .get('/stats', (ctx) => ctx.json(stats()));
 
-const app = new Hono()
+export const app = new Hono()
   .get('/', (ctx) => ctx.text("Hello 👋, I'm Mock Mirror"))
   .route('/mock-mirror', mockMirrorRoutes)
   .all('*', async (ctx) => {
@@ -97,13 +97,11 @@ const app = new Hono()
         });
       }
 
-      ctx.status((found.route.status ?? 200) as StatusCode);
-
-      for (const [key, value] of Object.entries(headers)) {
-        ctx.header(key, value);
+      if (found.route.contentType === 'application/json' || headers['content-type'] === 'application/json') {
+        return ctx.json(found.route.response, (found.route.status ?? 200) as StatusCode, headers);
       }
 
-      ctx.body('found.route.response');
+      return ctx.body(found.route.response as string, (found.route.status ?? 200) as StatusCode, headers);
     }
 
     ctx.status(404);
