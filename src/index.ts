@@ -117,4 +117,4 @@ export default {
   fetch: app.fetch,
 };
 
-export type MockMirrorRoutesType = typeof mockMirrorRoutes;
+export type App = typeof app;

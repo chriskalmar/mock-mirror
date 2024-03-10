@@ -1,33 +1,36 @@
 import { randomUUID } from 'node:crypto';
+import type { ClientRequestOptions } from 'hono';
 import { hc } from 'hono/client';
 import type { MockedRoute, MockedRoutes } from './types';
-import type { MockMirrorRoutesType } from '.';
+import type { App } from '.';
 
 export const createMockMirror = ({
   mockMirrorUrl,
   defaultRoutes,
+  options,
 }: {
   mockMirrorUrl?: string;
   defaultRoutes?: MockedRoutes;
+  options?: ClientRequestOptions;
 }) => {
-  const client = hc<MockMirrorRoutesType>(mockMirrorUrl ?? Bun.env.MOCK_MIRROR_URL ?? 'http://localhost:3210');
+  const client = hc<App>(mockMirrorUrl ?? Bun.env.MOCK_MIRROR_URL ?? 'http://localhost:3210', options);
 
   if (defaultRoutes) {
-    void client.add.$post({ json: { routes: defaultRoutes } });
+    void client['mock-mirror'].add.$post({ json: { routes: defaultRoutes } });
   }
 
   const getTools = ({ scope }: { scope: string }) => ({
     async addRoute(route: MockedRoute) {
-      return client.add.$post({ json: { scope, routes: [route] } });
+      return client['mock-mirror'].add.$post({ json: { scope, routes: [route] } });
     },
     async addRoutes(routes: MockedRoutes) {
-      return client.add.$post({ json: { scope, routes } });
+      return client['mock-mirror'].add.$post({ json: { scope, routes } });
     },
     async clearScope() {
-      return client['clear-scope'].$post({ json: { scope } });
+      return client['mock-mirror']['clear-scope'].$post({ json: { scope } });
     },
     async reset() {
-      return client.reset.$post();
+      return client['mock-mirror'].reset.$post();
     },
     scope,
   });
