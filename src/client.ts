@@ -49,10 +49,14 @@ export const createMockMirror = ({
   ) => {
     const scope = options?.scope ?? randomUUID();
 
-    return integrationTest(
+    const testResults = integrationTest(
       getTools({
         scope,
       }),
     );
+
+    void client['mock-mirror']['clear-scope'].$post({ json: { scope } });
+
+    return testResults;
   };
 };
