@@ -41,7 +41,7 @@ export const createMockMirror = ({
     scope,
   });
 
-  return (
+  return async (
     integrationTest: (tools: ReturnType<typeof getTools>) => unknown,
     options?: {
       scope?: string;
@@ -49,7 +49,7 @@ export const createMockMirror = ({
   ) => {
     const scope = options?.scope ?? randomUUID();
 
-    const testResults = integrationTest(
+    const testResults = await integrationTest(
       getTools({
         scope,
       }),
