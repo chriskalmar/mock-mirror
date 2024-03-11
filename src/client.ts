@@ -5,6 +5,8 @@ import { hc } from 'hono/client';
 import type { MockedRoute, MockedRoutes } from './types';
 import type { App } from '.';
 
+export type { MockedRoute, MockedRoutes } from './types';
+
 export const createMockMirror = ({
   mockMirrorUrl,
   defaultRoutes,
