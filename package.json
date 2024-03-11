@@ -1,6 +1,8 @@
 {
   "name": "mock-mirror",
   "version": "0.1.1",
+  "author": "Chris Kalmar",
+  "license": "MIT",
   "main": "dist/src/client.js",
   "files": [
     "dist/src"
@@ -52,5 +54,8 @@
         }
       ]
     }
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
