@@ -1,110 +1,107 @@
 import { beforeEach, describe, expect, it } from 'bun:test';
-import { edenTreaty } from '@elysiajs/eden';
+import { testClient } from 'hono/testing';
 import { MOCK_MIRROR_HEADER } from './const';
-import { app } from '.';
+import server, { app } from '.';
 
-const serverUrl = `http://localhost:${app.server?.port}`;
-const api = edenTreaty<typeof app>(serverUrl);
+const serverUrl = 'http://localhost:3212';
 
+Bun.serve({
+  ...server,
+  port: 3212,
+});
 describe('server', () => {
   beforeEach(async () => {
-    await api['mock-mirror'].reset.post();
+    await testClient(app)['mock-mirror'].reset.$post();
   });
 
   it('should return error if missing input for adding routes', async () => {
-    // @ts-expect-error input is omitted deliberately
-    const { data, error, status, response } = await api['mock-mirror'].add.post();
+    const response = await testClient(app)['mock-mirror'].add.$post({
+      // @ts-expect-error input is omitted deliberately
+      json: {},
+    });
 
-    expect(status).toBe(400);
-    expect(data).toInclude('Expected object');
+    expect(await response.text()).toInclude('ZodError');
   });
 
   it('should add routes to scope if provided', async () => {
-    const { data } = await api['mock-mirror'].add.post({ scope: 'scope-one', routes: [] });
+    const response = await testClient(app)['mock-mirror'].add.$post({ json: { scope: 'scope-one', routes: [] } });
 
-    expect(data).toMatchSnapshot();
+    expect(await response.json()).toMatchSnapshot();
   });
 
   it('should be able to respond with mock', async () => {
     {
-      const { data } = await api['mock-mirror'].add.post({
-        scope: 'scope-one',
-        routes: [
-          {
-            pathPattern: '/api/users/*',
-            method: 'GET',
-            response: 'any user',
-            status: 200,
-          },
-        ],
+      const response = await testClient(app)['mock-mirror'].add.$post({
+        json: {
+          scope: 'scope-one',
+          routes: [
+            {
+              pathPattern: '/api/users/*',
+              method: 'GET',
+              response: 'any user',
+              status: 200,
+            },
+          ],
+        },
       });
 
-      expect(data).toMatchSnapshot('add mock route');
+      expect(await response.json()).toMatchSnapshot('add mock route');
     }
 
     {
-      const response = await app
-        .handle(
-          new Request(`${serverUrl}/api/users/777`, {
-            method: 'GET',
-            headers: {
-              [MOCK_MIRROR_HEADER]: 'scope-one',
-            },
-          }),
-        )
-        .then(async (result) => result.text());
+      const response = await fetch(`${serverUrl}/api/users/777`, {
+        headers: {
+          [MOCK_MIRROR_HEADER]: 'scope-one',
+        },
+      });
 
-      expect(response).toMatchSnapshot('mock response');
+      expect(await response.text()).toMatchSnapshot('mock response');
     }
   });
 
   it('should be able to clear scope', async () => {
     {
-      const { data } = await api['mock-mirror'].add.post({
-        scope: 'scope-one',
-        routes: [
-          {
-            pathPattern: '/api/users/*',
-            method: 'GET',
-            response: 'any user',
-            status: 200,
-          },
-        ],
+      const response = await testClient(app)['mock-mirror'].add.$post({
+        json: {
+          scope: 'scope-one',
+          routes: [
+            {
+              pathPattern: '/api/users/*',
+              method: 'GET',
+              response: 'any user',
+              status: 200,
+            },
+          ],
+        },
       });
 
-      expect(data).toMatchSnapshot('add mock route');
+      expect(await response.json()).toMatchSnapshot('add mock route');
     }
 
     {
-      const response = await app
-        .handle(
-          new Request(`${serverUrl}/api/users/777`, {
-            method: 'GET',
-            headers: {
-              [MOCK_MIRROR_HEADER]: 'scope-one',
-            },
-          }),
-        )
-        .then(async (result) => result.text());
+      const response = await fetch(`${serverUrl}/api/users/777`, {
+        method: 'GET',
+        headers: {
+          [MOCK_MIRROR_HEADER]: 'scope-one',
+        },
+      });
 
-      expect(response).toMatchSnapshot('mock response');
+      expect(await response.text()).toMatchSnapshot('mock response');
     }
 
     {
-      const { data } = await api['mock-mirror']['clear-scope'].post({ scope: 'scope-one' });
+      const response = await testClient(app)['mock-mirror']['clear-scope'].$post({ json: { scope: 'scope-one' } });
 
-      expect(data).toMatchSnapshot('clear scope');
+      expect(await response.json()).toMatchSnapshot('clear scope');
     }
 
     {
-      const response = await app.handle(
-        new Request(`${serverUrl}/api/users/777`, {
-          method: 'GET',
-          headers: {
-            [MOCK_MIRROR_HEADER]: 'scope-one',
-          },
-        }),
-      );
+      const response = await fetch(`${serverUrl}/api/users/777`, {
+        method: 'GET',
+        headers: {
+          [MOCK_MIRROR_HEADER]: 'scope-one',
+        },
+      });
 
       expect(response.status).toBe(404);
     }
@@ -112,33 +109,33 @@ describe('server', () => {
 
   it('should respond with defined status code and headers', async () => {
     {
-      const { data } = await api['mock-mirror'].add.post({
-        scope: 'scope-one',
-        routes: [
-          {
-            pathPattern: '/api/users/*',
-            method: 'POST',
-            response: 'user will be created',
-            status: 201,
-            headers: {
-              'x-custom-header': 'custom-header-value',
+      const response = await testClient(app)['mock-mirror'].add.$post({
+        json: {
+          scope: 'scope-one',
+          routes: [
+            {
+              pathPattern: '/api/users/*',
+              method: 'POST',
+              response: 'user will be created',
+              status: 201,
+              headers: {
+                'x-custom-header': 'custom-header-value',
+              },
             },
-          },
-        ],
+          ],
+        },
       });
 
-      expect(data).toMatchSnapshot('add mock route');
+      expect(await response.json()).toMatchSnapshot('add mock route');
     }
 
     {
-      const response = await app.handle(
-        new Request(`${serverUrl}/api/users/777`, {
-          method: 'POST',
-          headers: {
-            [MOCK_MIRROR_HEADER]: 'scope-one',
-          },
-        }),
-      );
+      const response = await fetch(`${serverUrl}/api/users/777`, {
+        method: 'POST',
+        headers: {
+          [MOCK_MIRROR_HEADER]: 'scope-one',
+        },
+      });
 
       expect(response.status).toBe(201);
       expect(response.headers.get('x-custom-header')).toBe('custom-header-value');
@@ -148,98 +145,102 @@ describe('server', () => {
 
   it('should respond with defined content type', async () => {
     {
-      const { data } = await api['mock-mirror'].add.post({
-        scope: 'scope-one',
-        routes: [
-          {
-            pathPattern: '/api/users/*',
-            method: 'POST',
-            response: 'user will be created',
-            status: 201,
-            contentType: 'application/json',
-            headers: {
-              'x-custom-header': 'custom-header-value',
+      const response = await testClient(app)['mock-mirror'].add.$post({
+        json: {
+          scope: 'scope-one',
+          routes: [
+            {
+              pathPattern: '/api/users/*',
+              method: 'POST',
+              response: 'user will be created',
+              status: 201,
+              contentType: 'application/json',
+              headers: {
+                'x-custom-header': 'custom-header-value',
+              },
             },
-          },
-        ],
+          ],
+        },
       });
 
-      expect(data).toMatchSnapshot('add mock route');
+      expect(await response.json()).toMatchSnapshot('add mock route');
     }
 
     {
-      const response = await app.handle(
-        new Request(`${serverUrl}/api/users/777`, {
-          method: 'POST',
-          headers: {
-            [MOCK_MIRROR_HEADER]: 'scope-one',
-          },
-        }),
-      );
+      const response = await fetch(`${serverUrl}/api/users/777`, {
+        method: 'POST',
+        headers: {
+          [MOCK_MIRROR_HEADER]: 'scope-one',
+        },
+      });
 
-      expect(response.headers.toJSON()).toMatchSnapshot('headers');
+      expect(response.headers.get('content-type')).toMatch('application/json');
+      expect(response.headers.get('x-custom-header')).toMatch('custom-header-value');
     }
   });
 
   it('should respond with defined delay', async () => {
     {
-      const { data } = await api['mock-mirror'].add.post({
-        scope: 'scope-one',
-        routes: [
-          {
-            pathPattern: '/api/users/*',
-            method: 'POST',
-            response: 'user will be created',
-            status: 201,
-            contentType: 'application/json',
-            delay: 2000,
-          },
-        ],
+      const response = await testClient(app)['mock-mirror'].add.$post({
+        json: {
+          scope: 'scope-one',
+          routes: [
+            {
+              pathPattern: '/api/users/*',
+              method: 'POST',
+              response: {
+                message: 'user will be created',
+              },
+              status: 201,
+              contentType: 'application/json',
+              delay: 2000,
+            },
+          ],
+        },
       });
 
-      expect(data).toMatchSnapshot('add mock route');
+      expect(await response.json()).toMatchSnapshot('add mock route');
     }
 
     const start = Date.now();
-    const response = await app.handle(
-      new Request(`${serverUrl}/api/users/777`, {
-        method: 'POST',
-        headers: {
-          [MOCK_MIRROR_HEADER]: 'scope-one',
-        },
-      }),
-    );
+    const response = await fetch(`${serverUrl}/api/users/777`, {
+      method: 'POST',
+      headers: {
+        [MOCK_MIRROR_HEADER]: 'scope-one',
+      },
+    });
+
     const end = Date.now();
 
     expect(end - start).toBeGreaterThanOrEqual(1000);
     expect(response.status).toBe(201);
-    expect(await response.text()).toMatchSnapshot('mock response');
+    expect(await response.json()).toMatchSnapshot('mock response');
   });
 
   it('should respond with default scope if no scope is provided', async () => {
     {
-      const { data } = await api['mock-mirror'].add.post({
-        routes: [
-          {
-            pathPattern: '/api/users/*',
-            method: 'POST',
-            response: 'user will be created',
-            status: 201,
-            contentType: 'application/json',
-          },
-        ],
+      const response = await testClient(app)['mock-mirror'].add.$post({
+        json: {
+          routes: [
+            {
+              pathPattern: '/api/users/*',
+              method: 'POST',
+              response: 'user will be created',
+              status: 201,
+              contentType: 'application/json',
+            },
+          ],
+        },
       });
 
-      expect(data).toMatchSnapshot('add mock route');
+      expect(await response.json()).toMatchSnapshot('add mock route');
     }
 
-    const response = await app.handle(
-      new Request(`${serverUrl}/api/users/777`, {
-        method: 'POST',
-      }),
-    );
+    const response = await fetch(`${serverUrl}/api/users/777`, {
+      method: 'POST',
+    });
 
     expect(response.status).toBe(201);
-    expect(await response.text()).toMatchSnapshot('mock response');
+    expect(await response.json()).toMatchSnapshot('mock response');
   });
 });

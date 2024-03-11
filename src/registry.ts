@@ -32,7 +32,7 @@ export const addMockedRoute = ({ scope, route }: { scope: string; route: MockedR
 
   registry.set(scope, [newRoute, ...routes]);
 
-  logger.info(`Added new route to scope ${scope}: ${route.method} ${route.pathPattern}`);
+  logger.info(`Added new route to scope ${scope}: ${route.method ?? 'ALL'} ${route.pathPattern}`);
 };
 
 export const addMockedRoutes = ({ scope, routes }: { scope: string; routes: MockedRoutes }) => {

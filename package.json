@@ -7,20 +7,23 @@
   ],
   "types": "dist/src/client.d.ts",
   "scripts": {
-    "test": "bun test",
+    "test": "bun test src/*.test.ts",
     "lint": "xo",
     "build": "bunx tsc",
-    "dev": "bun run --watch src/index.ts",
+    "dev": "bun run --hot src/index.ts",
     "release": "bunx np"
   },
   "dependencies": {
-    "@elysiajs/eden": "0.8.1",
-    "elysia": "0.8.17",
+    "@hono/zod-validator": "0.2.0",
+    "hono": "4.0.10",
+    "isomorphic-fetch": "3.0.0",
     "minimatch": "9.0.3",
     "pino": "8.19.0",
-    "pino-pretty": "10.3.1"
+    "pino-pretty": "10.3.1",
+    "zod": "3.22.4"
   },
   "devDependencies": {
+    "@types/isomorphic-fetch": "0.0.39",
     "bun-plugin-dts": "^0.2.1",
     "bun-types": "latest",
     "prettier": "^3.2.5",
@@ -43,6 +46,8 @@
       "@typescript-eslint/object-curly-spacing": "off",
       "@typescript-eslint/naming-convention": "off",
       "new-cap": "off",
+      "unicorn/prevent-abbreviations": "off",
+      "import/no-anonymous-default-export": "off",
       "import/extensions": [
         "error",
         "ignorePackages",
