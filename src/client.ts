@@ -1,38 +1,47 @@
 import { randomUUID } from 'node:crypto';
-import { edenTreaty } from '@elysiajs/eden';
+import type { ClientRequestOptions } from 'hono';
+import fetch from 'isomorphic-fetch';
+import { hc } from 'hono/client';
 import type { MockedRoute, MockedRoutes } from './types';
-import type { app } from '.';
+import type { App } from '.';
+
+export type { MockedRoute, MockedRoutes } from './types';
 
 export const createMockMirror = ({
   mockMirrorUrl,
   defaultRoutes,
+  options,
 }: {
   mockMirrorUrl?: string;
   defaultRoutes?: MockedRoutes;
+  options?: ClientRequestOptions;
 }) => {
-  const api = edenTreaty<typeof app>(mockMirrorUrl ?? Bun.env.MOCK_MIRROR_URL ?? 'http://localhost:3210', {});
+  const client = hc<App>(mockMirrorUrl ?? Bun.env.MOCK_MIRROR_URL ?? 'http://localhost:3210', {
+    ...options,
+    fetch: options?.fetch ?? fetch,
+  });
 
   if (defaultRoutes) {
-    void api['mock-mirror'].add.post({ routes: defaultRoutes });
+    void client['mock-mirror'].add.$post({ json: { routes: defaultRoutes } });
   }
 
   const getTools = ({ scope }: { scope: string }) => ({
     async addRoute(route: MockedRoute) {
-      return api['mock-mirror'].add.post({ scope, routes: [route] });
+      return client['mock-mirror'].add.$post({ json: { scope, routes: [route] } });
     },
     async addRoutes(routes: MockedRoutes) {
-      return api['mock-mirror'].add.post({ scope, routes });
+      return client['mock-mirror'].add.$post({ json: { scope, routes } });
     },
     async clearScope() {
-      return api['mock-mirror']['clear-scope'].post({ scope });
+      return client['mock-mirror']['clear-scope'].$post({ json: { scope } });
     },
     async reset() {
-      return api['mock-mirror'].reset.post();
+      return client['mock-mirror'].reset.$post();
     },
     scope,
   });
 
-  return (
+  return async (
     integrationTest: (tools: ReturnType<typeof getTools>) => unknown,
     options?: {
       scope?: string;
@@ -40,10 +49,14 @@ export const createMockMirror = ({
   ) => {
     const scope = options?.scope ?? randomUUID();
 
-    return integrationTest(
+    const testResults = await integrationTest(
       getTools({
         scope,
       }),
     );
+
+    void client['mock-mirror']['clear-scope'].$post({ json: { scope } });
+
+    return testResults;
   };
 };

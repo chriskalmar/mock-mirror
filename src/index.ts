@@ -1,4 +1,7 @@
-import { Elysia, t } from 'elysia';
+import { Hono } from 'hono';
+import { type StatusCode } from 'hono/utils/http-status';
+import { z } from 'zod';
+import { zValidator } from '@hono/zod-validator';
 import { logger } from './logger';
 import {
   addDefaultMockedRoutes,
@@ -11,75 +14,76 @@ import {
 import { DEFAULT_SCOPE, MOCK_MIRROR_HEADER } from './const';
 import { MockedRoutesDto } from './schemas';
 
-export const app = new Elysia()
+const mockMirrorRoutes = new Hono()
+  .post('/reset', (ctx) => {
+    resetRegistry();
 
-  .get('/', () => "Hello 👋, I'm Mock Mirror")
+    logger.info('Registry has been reset');
 
-  .group('/mock-mirror', (mockMirror) =>
-    mockMirror
-      .post('/reset', () => {
-        resetRegistry();
+    return ctx.json({
+      success: true,
+    });
+  })
+  .post(
+    '/add',
+    zValidator(
+      'json',
+      z.object({
+        scope: z.string().optional(),
+        routes: MockedRoutesDto,
+      }),
+    ),
+    (ctx) => {
+      const body = ctx.req.valid('json');
 
-        logger.info('Registry has been reset');
+      if (body.scope) {
+        addMockedRoutes({
+          scope: body.scope,
+          routes: body.routes,
+        });
+      } else {
+        addDefaultMockedRoutes(body.routes);
+      }
 
-        return {
-          success: true,
-        };
-      })
-
-      .post(
-        '/add',
-        ({ body }) => {
-          if (body.scope) {
-            addMockedRoutes({
-              scope: body.scope,
-              routes: body.routes,
-            });
-          } else {
-            addDefaultMockedRoutes(body.routes);
-          }
-
-          return {
-            success: true,
-          };
-        },
-        {
-          body: t.Object({
-            scope: t.Optional(t.String()),
-            routes: MockedRoutesDto,
-          }),
-        },
-      )
-
-      .post(
-        '/clear-scope',
-        ({ body }) => {
-          clearScope(body.scope);
-
-          logger.info(`Cleared scope: ${body.scope}`);
-
-          return {
-            success: true,
-          };
-        },
-        {
-          body: t.Object({
-            scope: t.String(),
-          }),
-        },
-      )
-
-      .get('/stats', stats),
+      return ctx.json({
+        success: true,
+      });
+    },
   )
+  .post(
+    '/clear-scope',
+    zValidator(
+      'json',
+      z.object({
+        scope: z.string(),
+      }),
+    ),
+    (ctx) => {
+      const body = ctx.req.valid('json');
 
-  .all('*', async ({ path, headers, set, request }) => {
-    const scope = headers[MOCK_MIRROR_HEADER] ?? DEFAULT_SCOPE;
+      clearScope(body.scope);
+
+      logger.info(`Cleared scope: ${body.scope}`);
+
+      return ctx.json({
+        success: true,
+      });
+    },
+  )
+  .get('/stats', (ctx) => ctx.json(stats()));
+
+export const app = new Hono()
+  .get('/', (ctx) => ctx.text("Hello 👋, I'm Mock Mirror"))
+  .route('/mock-mirror', mockMirrorRoutes)
+  .all('*', async (ctx) => {
+    const scope = ctx.req.header(MOCK_MIRROR_HEADER) ?? DEFAULT_SCOPE;
+    const { path, method } = ctx.req;
 
     if (!scope) {
       logger.warn(`No Mock Mirror scope header provided for: ${path}`);
     }
 
-    const found = findMatchingRoute({ scope, path, method: request.method });
+    const found = findMatchingRoute({ scope, path, method });
 
     if (found) {
       const headers = found.route.headers ?? {};
@@ -93,16 +97,22 @@ export const app = new Elysia()
         });
       }
 
-      set.status = found.route.status;
-      set.headers = headers;
+      if (found.route.contentType === 'application/json' || headers['content-type'] === 'application/json') {
+        return ctx.json(found.route.response, (found.route.status ?? 200) as StatusCode, headers);
+      }
 
-      return found.route.response;
+      return ctx.body(found.route.response as string, (found.route.status ?? 200) as StatusCode, headers);
     }
 
-    set.status = 'Not Found';
-    return 'Not Found';
-  })
+    ctx.status(404);
+    ctx.body('Not Found');
+  });
 
-  .listen(Bun.env.PORT ?? 3210);
+logger.info(`🪞 Mock Mirror is running at http://localhost:${Bun.env.PORT ?? 3210}`);
 
-logger.info(`🪞 Mock Mirror is running at ${app.server?.hostname}:${app.server?.port}`);
+export default {
+  port: Bun.env.PORT ?? 3210,
+  fetch: app.fetch,
+};
+
+export type App = typeof app;
