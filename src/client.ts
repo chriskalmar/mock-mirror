@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import type { ClientRequestOptions } from 'hono';
+import fetch from 'isomorphic-fetch';
 import { hc } from 'hono/client';
 import type { MockedRoute, MockedRoutes } from './types';
 import type { App } from '.';
@@ -13,7 +14,10 @@ export const createMockMirror = ({
   defaultRoutes?: MockedRoutes;
   options?: ClientRequestOptions;
 }) => {
-  const client = hc<App>(mockMirrorUrl ?? Bun.env.MOCK_MIRROR_URL ?? 'http://localhost:3210', options);
+  const client = hc<App>(mockMirrorUrl ?? Bun.env.MOCK_MIRROR_URL ?? 'http://localhost:3210', {
+    ...options,
+    fetch: options?.fetch ?? fetch,
+  });
 
   if (defaultRoutes) {
     void client['mock-mirror'].add.$post({ json: { routes: defaultRoutes } });
