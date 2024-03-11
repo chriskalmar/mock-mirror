@@ -2,6 +2,14 @@
   <img width='480px' height='200px' src='./assets/mock-mirror.png'>
 </div>
 
+---
+
+<div align='center'>
+  <a href="https://www.npmjs.com/package/mock-mirror"><img src="https://img.shields.io/npm/v/mock-mirror?style=plastic" /></a>
+  <a href="https://www.npmjs.com/package/mock-mirror"><img src="https://img.shields.io/npm/dt/mock-mirror" /></a>
+  <a href="https://github.com/chriskalmar/mock-mirror/blob/main/LICENSE"><img src="https://img.shields.io/github/license/chriskalmar/mock-mirror" /></a>
+</div>
+
 # Mock Mirror
 
 Mock services behind your backend during integration tests.
