@@ -14,6 +14,14 @@
 
 Mock services behind your backend during integration tests.
 
+## Install
+
+Install **Mock Mirror** as a dev dependency:
+
+```bash
+npm install -D mock-mirror
+```
+
 ## Why
 
 When writing integration tests, there are numerous ways to mock responses from your backend. This can be done directly in your tests (for example, in **Playwright**, **Cypress**, etc.) or by using tools like **Mock Service Worker**.
