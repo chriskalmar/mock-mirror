@@ -7,7 +7,7 @@
   ],
   "types": "dist/src/client.d.ts",
   "scripts": {
-    "test": "bun test",
+    "test": "bun test src/*.test.ts",
     "lint": "xo",
     "build": "bunx tsc",
     "dev": "bun run --hot src/index.ts",
