@@ -3,6 +3,19 @@
   "version": "0.2.0",
   "author": "Chris Kalmar",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chriskalmar/mock-mirror.git"
+  },
+  "keywords": [
+    "mock",
+    "mock server",
+    "api testing",
+    "rest"
+  ],
+  "bugs": {
+    "url": "https://github.com/chriskalmar/mock-mirror/issues"
+  },
   "main": "dist/src/client.js",
   "files": [
     "dist/src"
