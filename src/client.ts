@@ -7,6 +7,8 @@ import type { App } from '.';
 
 export type { MockedRoute, MockedRoutes } from './types';
 
+export { MOCK_MIRROR_HEADER } from './const';
+
 export const createMockMirror = ({
   mockMirrorUrl,
   defaultRoutes,
