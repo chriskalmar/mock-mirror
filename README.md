@@ -1,5 +1,5 @@
 <div align='center'>
-  <img width='480px' height='200px' src='./assets/mock-mirror.png'>
+  <img width='480px' height='200px' src='https://github.com/chriskalmar/mock-mirror/assets/8336893/7ab47463-87ed-40f5-9ca7-e0a959d87fdd'>
 </div>
 
 ---
